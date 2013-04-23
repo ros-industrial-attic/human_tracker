@@ -1,0 +1,27 @@
+<package>
+  <description brief="consistency">
+
+     consistency
+
+  </description>
+  <author>Chris Lewis</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/consistency</url>
+  <depend package="roscpp"/>
+  <depend package="rospy"/>
+  <depend package="image_transport"/>
+  <depend package="cv_bridge"/>
+  <depend package="roi_msgs"/>
+  <depend package="opencv2"/>
+  <depend package="nodelet"/>
+
+  <export>
+    <rosbuild cmake_directory="${prefix}/cmake"/>
+    <cpp cflags="-I${prefix}/include" lflags="-L${prefix}/lib -lconsistency"/>  
+    <nodelet plugin="${prefix}/nodelet_plugins.xml" />
+  </export>
+
+</package>
+
+
