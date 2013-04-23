@@ -3,8 +3,8 @@ minAspect: 4.8572435975074768e-01
 maxAspect: 5.0596648454666138e-01
 stepAspect: 8.9999997615814209e-01
 minDisparity: 0.
-minX: 35.
-maxX: 603.
+minX: 10.
+maxX: 960.
 stepX: .1
 minY: 142.
 maxY: 247.
