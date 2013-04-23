@@ -1,0 +1,100 @@
+#!/usr/bin/python
+
+import roslib; roslib.load_manifest('Acuity')
+import rospy
+import thread
+
+from acuity.msg import LaserRange
+
+#-----------------------------------------------------------------------------------
+# AcuitySimulator node class
+#
+# Creates a simulated acuity signal or repeats the actual signal if present
+#
+# Subscribes to 'laser_dist' (LaserRange)
+# Publishes 'laser_dist_combined' (LaserRange)
+#
+# Paramters:
+#   max_dead_time: maximum amount of time(s) without real published data before the
+#   simulated values are published
+#   sim_pub_rate: rate(hz) for publishing simulated data.
+#   sim_pub_speed: speed of simulated distance measurement (m/s)
+#   
+#-----------------------------------------------------------------------------------
+class AcuitySimulator():
+    def __init__(self):
+        rospy.init_node('acuity_simulator')
+  
+        self.dead_time = rospy.Duration(rospy.get_param('~dead_time', 2.5))
+        rospy.loginfo("Setting dead time value based on parameter: %s", str(self.dead_time))
+
+        self.sim_pub_rate = rospy.get_param('~sim_pub_rate', 50.0)
+        rospy.loginfo("Setting simulated publish rate value based on parameter: %s", str(self.sim_pub_rate))
+
+        self.sim_pub_speed = rospy.get_param('~sim_pub_speed', 0.1)
+        rospy.loginfo("Setting simulated speed based on parameter: %f", self.sim_pub_speed)
+
+        rospy.loginfo("Creating laser_dist subscriber")
+        self.sub = rospy.Subscriber('laser_dist', LaserRange, self.callback)
+        rospy.loginfo("Creating laster_dist_sim publisher")
+        self.pub = rospy.Publisher('laser_dist_filtered', LaserRange)
+
+        # Keeps the time the last call back was executed
+        self.last_msg_recv = rospy.Time.now()
+        self.last_laser_dist = 0.0
+
+        # Thread items
+        self.lock = thread.allocate_lock()
+        self.simulator_if = thread.start_new_thread(self.simulator, ())
+
+
+
+
+
+    # Callback for LaserRange message (republished message)
+    def callback(self, msg):
+        
+        self.lock.acquire()
+        self.last_msg_recv = rospy.Time.now()
+        self.last_laser_dist = msg.range
+        self.pub.publish(msg)
+        self.lock.release()
+    
+    # Creates simulated data on publish topic if data has not be received lately
+    def simulator(self):
+
+        spin_rate = rospy.Rate(self.sim_pub_rate)
+        rospy.loginfo("Staring simulator loop")
+
+        while(True):
+
+            try:
+                self.lock.acquire()
+                if ( (rospy.Time.now() - self.last_msg_recv) > self.dead_time):
+
+                    #rospy.loginfo("Messages not received, simulating")
+                    msg = LaserRange()
+                    msg.header.stamp = rospy.Time.now()
+                    msg.range = self.last_laser_dist + ((1.0 / self.sim_pub_rate) * self.sim_pub_speed)
+                    self.last_laser_dist = msg.range
+                    #rospy.loginfo("Simulated message: %s", str(msg))
+                    self.pub.publish(msg)
+
+                spin_rate.sleep()
+
+            except Exception as e:
+                rospy.logerr("Unhandled exception in simulator: %s", e)
+
+            finally:
+                self.lock.release()
+                    
+
+
+if __name__ == '__main__':
+    try:
+        rospy.loginfo('Executing acuity_simulator')
+        sp = AcuitySimulator()
+        rospy.spin()
+    except rospy.ROSInterruptException: pass
+
+

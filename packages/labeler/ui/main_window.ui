@@ -1,0 +1,605 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindowDesign</class>
+ <widget class="QMainWindow" name="MainWindowDesign">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>984</width>
+    <height>672</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string>ROS Labeler</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>:/images/icon.png</normaloff>:/images/icon.png</iconset>
+  </property>
+  <property name="locale">
+   <locale language="English" country="Australia"/>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout">
+    <item>
+     <widget class="QFrame" name="frame_image">
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <widget class="QLabel" name="label_image">
+       <property name="geometry">
+        <rect>
+         <x>1</x>
+         <y>1</y>
+         <width>640</width>
+         <height>480</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="pixmap">
+        <pixmap>../../images/frame0000.jpg</pixmap>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="line_source">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>540</y>
+         <width>631</width>
+         <height>27</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_source">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>520</y>
+         <width>141</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Image Source Folder</string>
+       </property>
+      </widget>
+      <widget class="QFrame" name="frame">
+       <property name="geometry">
+        <rect>
+         <x>650</x>
+         <y>10</y>
+         <width>307</width>
+         <height>491</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <widget class="QGroupBox" name="groupbox_imageControls">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="title">
+           <string>ROI Image Controls</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout">
+           <item row="5" column="0">
+            <widget class="QLabel" name="label_value">
+             <property name="text">
+              <string>ROI Selection Value</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QPushButton" name="button_previous">
+             <property name="text">
+              <string>Previous Image</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QPushButton" name="button_next">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="toolTip">
+              <string>Set the target to the current joint trajectory state.</string>
+             </property>
+             <property name="statusTip">
+              <string>Clear all waypoints and set the target to the current joint trajectory state.</string>
+             </property>
+             <property name="text">
+              <string>Next Image</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QPushButton" name="button_clear">
+             <property name="text">
+              <string>Clear Last ROI</string>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="0">
+            <widget class="QSpinBox" name="spinbox_value">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimum">
+              <number>-99</number>
+             </property>
+             <property name="value">
+              <number>1</number>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QPushButton" name="button_recalculate">
+             <property name="text">
+              <string>Recalculate ROI</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupBox">
+          <property name="title">
+           <string>Random ROI Controls</string>
+          </property>
+          <widget class="QCheckBox" name="checkBox_display_random">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>220</y>
+             <width>261</width>
+             <height>22</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Display randomly generated ROI</string>
+           </property>
+           <property name="checked">
+            <bool>false</bool>
+           </property>
+          </widget>
+          <widget class="QSpinBox" name="spinBox_random_value">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>50</y>
+             <width>60</width>
+             <height>27</height>
+            </rect>
+           </property>
+           <property name="minimum">
+            <number>-99</number>
+           </property>
+           <property name="value">
+            <number>-1</number>
+           </property>
+          </widget>
+          <widget class="QSlider" name="horizontalSlider_overlap">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>170</y>
+             <width>261</width>
+             <height>29</height>
+            </rect>
+           </property>
+           <property name="maximum">
+            <number>100</number>
+           </property>
+           <property name="singleStep">
+            <number>10</number>
+           </property>
+           <property name="value">
+            <number>50</number>
+           </property>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="tickPosition">
+            <enum>QSlider::TicksBelow</enum>
+           </property>
+           <property name="tickInterval">
+            <number>10</number>
+           </property>
+          </widget>
+          <widget class="QSpinBox" name="spinBox_random_count">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>110</y>
+             <width>60</width>
+             <height>27</height>
+            </rect>
+           </property>
+           <property name="value">
+            <number>10</number>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_random">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>30</y>
+             <width>221</width>
+             <height>17</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Random ROI Selection Value</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_random_count">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>90</y>
+             <width>241</width>
+             <height>17</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Number of random ROI to generate</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_overlap">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>150</y>
+             <width>261</width>
+             <height>17</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>ROI overlap with existing ROI</string>
+           </property>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QPushButton" name="button_load">
+       <property name="geometry">
+        <rect>
+         <x>760</x>
+         <y>540</y>
+         <width>101</width>
+         <height>27</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Load</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="button_quit">
+       <property name="geometry">
+        <rect>
+         <x>870</x>
+         <y>540</y>
+         <width>91</width>
+         <height>27</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Quit</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="button_source_browse">
+       <property name="geometry">
+        <rect>
+         <x>650</x>
+         <y>540</y>
+         <width>98</width>
+         <height>27</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Browse</string>
+       </property>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>984</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_File">
+    <property name="title">
+     <string>&amp;App</string>
+    </property>
+    <addaction name="action_Preferences"/>
+    <addaction name="separator"/>
+    <addaction name="actionAbout"/>
+    <addaction name="actionAbout_Qt"/>
+    <addaction name="separator"/>
+    <addaction name="action_Quit"/>
+   </widget>
+   <addaction name="menu_File"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="action_Quit">
+   <property name="text">
+    <string>&amp;Quit</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
+  </action>
+  <action name="action_Preferences">
+   <property name="text">
+    <string>&amp;Preferences</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>&amp;About</string>
+   </property>
+  </action>
+  <action name="actionAbout_Qt">
+   <property name="text">
+    <string>About &amp;Qt</string>
+   </property>
+  </action>
+  <action name="action_Next">
+   <property name="text">
+    <string>&amp;Next</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
+  </action>
+  <action name="action_Previous">
+   <property name="text">
+    <string>&amp;Previous</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
+  </action>
+  <action name="action_Clear">
+   <property name="text">
+    <string>&amp;Clear</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
+  </action>
+  <action name="action_Load">
+   <property name="text">
+    <string>&amp;Load</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+L</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>action_Quit</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindowDesign</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>button_next</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindowDesign</receiver>
+   <slot>button_next()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>698</x>
+     <y>85</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>541</x>
+     <y>29</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>button_previous</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindowDesign</receiver>
+   <slot>button_previous()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>742</x>
+     <y>114</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>605</x>
+     <y>56</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>button_clear</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindowDesign</receiver>
+   <slot>button_clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>727</x>
+     <y>159</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>603</x>
+     <y>103</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>button_load</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindowDesign</receiver>
+   <slot>button_load()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>778</x>
+     <y>580</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>0</x>
+     <y>218</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>button_quit</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindowDesign</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>969</x>
+     <y>580</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>469</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>button_source_browse</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindowDesign</receiver>
+   <slot>button_source_browse()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>714</x>
+     <y>580</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-3</x>
+     <y>463</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBox_display_random</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>MainWindowDesign</receiver>
+   <slot>check_display_random()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>719</x>
+     <y>519</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-4</x>
+     <y>615</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>button_recalculate</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindowDesign</receiver>
+   <slot>button_recalculate()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>819</x>
+     <y>193</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>491</x>
+     <y>335</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>button_next()</slot>
+  <slot>button_previous()</slot>
+  <slot>button_clear()</slot>
+  <slot>button_load()</slot>
+  <slot>button_source_browse()</slot>
+  <slot>button_save_browse()</slot>
+  <slot>check_display_random()</slot>
+  <slot>button_recalculate()</slot>
+ </slots>
+</ui>

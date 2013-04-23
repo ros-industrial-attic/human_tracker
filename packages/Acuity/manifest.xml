@@ -1,0 +1,16 @@
+<package>
+  <description brief="acuity">
+
+     acuity
+
+  </description>
+  <author>Shaun Edwards</author>
+  <license>Proprietary</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/acuity</url>
+  <depend package="rospy"/>
+  <depend package="std_msgs"/>
+
+</package>
+
+

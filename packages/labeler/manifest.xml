@@ -1,0 +1,24 @@
+<package>
+  <description brief="labeler">
+
+     labeler
+
+  </description>
+  <author>viki</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/labeler</url>
+
+
+  <rosdep name="qt4"/>
+
+  <!-- rosbuild1 -->
+  <depend package="qt_build"/>
+  <depend package="roscpp"/>
+  
+  <rosbuild2>
+    <depend package="qt_build"/>
+    <depend package="roscpp"/>
+  </rosbuild2>
+  
+</package>

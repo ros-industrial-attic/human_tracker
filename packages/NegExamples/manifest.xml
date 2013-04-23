@@ -1,0 +1,21 @@
+<package>
+  <description brief="NegExamples">
+
+     NegExamples
+
+  </description>
+  <author>Chris Lewis</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/NegExamples</url>
+  <depend package="roscpp"/>
+  <depend package="rospy"/>
+  <depend package="image_transport"/>
+  <depend package="cv_bridge"/>
+  <depend package="dynamic_reconfigure"/>
+  <depend package="opencv2"/>
+  <depend package="roi_msgs"/>
+
+</package>
+
+

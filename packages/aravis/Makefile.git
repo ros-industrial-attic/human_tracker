@@ -1,0 +1,20 @@
+GIT_DIR = build/aravis
+GIT_URL = git://git.gnome.org/aravis
+
+all: installed
+
+installed:
+	rm -rf build
+	@mkdir -p lib
+	@mkdir -p include
+	git clone $(GIT_URL) $(GIT_DIR)
+	cd $(GIT_DIR) && git checkout $(GIT_REVISION)
+	touch rospack_nosubdirs
+	cd build/aravis && ./autogen.sh
+	cd build/aravis && make
+	cp build/aravis/src/.libs/*.so* ./lib
+	cp build/aravis/src/*.h ./include
+	touch installed
+
+clean:
+	rm -rf build installed lib include

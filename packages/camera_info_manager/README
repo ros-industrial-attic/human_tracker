@@ -1,0 +1,5 @@
+This is a slightly updated version of the standard ros package.
+It allows the name of the info topic to be distinct.
+This in turn allows the object to be used multiple times in the same node
+One must get this package to compile to use it.
+Just touch the .cpp file and execute a rosmake

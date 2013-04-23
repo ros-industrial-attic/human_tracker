@@ -1,0 +1,31 @@
+<launch>
+
+  <arg name="classifierDir" default="Kinect"/>
+  <arg name="kinect_fix_disparity" default="true"/>
+
+  <include file="$(find openni_launch)/launch/openni.launch"/> 
+
+  <!-- Launch consisteny node -->
+  <node pkg="consistency" type="consistency_node" name="consistency" output="screen">
+	<!-- mode = {accumulate,load} -->
+        <param name="Q_Size" type="int" value="10"/>
+	<param name="UseDefaultRois" type="bool" value="true" />
+	<param name="mode" type="string" value="load"/>
+	<param name="label" 	 type="int"    value="1"  />
+	<param name="yaml_filename" type="string" value="$(env NIST_CLASSIFIERS)/$(arg classifierDir)/constraints.yml"/>
+	<param name="max_training_samples" type="int" value="115"/>
+	<remap from="input_rois" to="output_rois" />
+	<remap from="Color_Image" to="/camera/rgb/image_color" />
+	<remap from="Disparity_Image" to="/camera/depth/disparity" />
+        <param name="Kinect_Disparity_Fix" value="$(arg kinect_disparity_fix)"/>	
+   </node>
+
+   <!-- display the rois -->
+   <node pkg="roiViewer" type="roiViewer" name="roiViewer" >
+        <param name="mode" type="string" value="roi_display"/> 
+        <param name="label" type="int" value="1" />
+	<remap from ="input_image" to="ConsistencyColorImage"/>
+	<remap from ="input_rois" to="ConsistencyOutputRois"/>  
+   </node>
+
+</launch>

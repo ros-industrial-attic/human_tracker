@@ -1,0 +1,14 @@
+<package>
+  <description brief="kinect_data">
+
+     kinect_data
+
+  </description>
+  <author>Chris Lewis</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/kinect_data</url>
+
+</package>
+
+

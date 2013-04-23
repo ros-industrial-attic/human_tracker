@@ -1,0 +1,32 @@
+<launch>
+
+  <arg name="bag_filename" default="simultaneous_data" />
+  <arg name="topics" default="camera/rgb/image_color camera/depth/disparity /camera/depth_registered/camera_info camera/ir/camera_info camera/projector/camera_info camera/rgb/camera_info Basler_21280024/image_raw Basler_21280021/image_raw Basler_21280024/camera_info Basler_21280021/camera_info"/>
+
+  <!-- Launch the kinect node to get data -->
+  <include file="$(find openni_launch)/launch/openni.launch"/> 
+
+  <!-- Launch the stereo node to get data -->
+  <include file="$(find aravis_camera_driver)/launch/nist_raw_cameras.launch"/> 
+  <!-- Launch bag file to save data -->	
+  <!-- NOTE: uses  "export NIST_BAG_DIR=/home/nist/bags"  in .bashrc-->
+  <node pkg="rosbag" type="record" name="rosbagrecord" args="$(arg topics) -o $(env NIST_BAG_DIR)/$(arg bag_filename)"/>
+
+  <node pkg="image_view" type="image_view" name="Kinect_Color">
+    <remap from="image" to="camera/rgb/image_color"/>
+  </node>
+
+  <node pkg="image_view" type="disparity_view" name="Kinect_Disparity">
+    <remap from="image" to="camera/depth/disparity"/>
+  </node>
+
+  <node pkg="image_view" type="image_view" name="Left_Stereo_Color">
+    <remap from="image" to="Basler_21280024/image_raw"/>
+  </node>
+
+  <node pkg="image_view" type="image_view" name="Right_Stereo_Color">
+    <remap from="image" to="Basler_21280021/image_raw"/>
+  </node>
+
+
+</launch>

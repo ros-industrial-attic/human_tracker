@@ -1,0 +1,47 @@
+<launch>
+
+  <!-- Launch to training data from a directory using RoiPlayer -->
+  <arg name="directory" default="kinect_combined"/>
+  <arg name="classifierDir" default="Kinect"/>
+  <arg name="replayRate" default="5.0"/>
+
+  <node name="Roi_Player" pkg="roiPlayer" type="roiPlayer">
+        <param name="mode"            value="directory"/>
+        <param name="imageFolderPath" value="$(env NIST_IMAGES)/$(arg directory)"/>
+	<param name="replayRate"      value="$(arg replayRate)"/>	
+  </node>
+
+  <!-- Launch HaarSvm Node-->
+  <node name="HaarSvmNode" pkg="HaarSvm" type="HaarSvm8" output="screen">	
+       <remap from="Color_Image" to="output_image"/>	
+       <remap from="Disparity_Image" to="output_disparity"/>
+       <remap from="input_rois" to="output_rois"/>
+       <!-- mode={detect,train,load,accumulate,evaluate} -->
+       <param name="mode" value="evaluate"/>
+       <param name="classifier_file" value="$(env NIST_CLASSIFIERS)/$(arg classifierDir)/HaarSvm.xml"/>
+       <param name="num_Training_Samples" value="5400"/>
+       <param name="HaarSvmThreshold" value="1.2"/>
+  </node> 
+
+   <!-- display the rois after training-->
+   <node pkg="roiViewer" type="roiViewer" name="roiViewer" >
+        <param name="mode" type="string" value="roi_display"/> 
+        <param name="label" type="int" value="1" />
+	<remap from ="input_image" to="HaarSvmColorImage"/>
+	<remap from ="input_rois"  to="HaarSvmOutputRois"/>  
+   </node>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</launch>

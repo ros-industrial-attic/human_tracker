@@ -1,0 +1,16 @@
+<launch>
+
+  <include file="$(find aravis_camera_driver)/launch/nist_raw_cameras.launch"/>
+  <include file="$(find aravis_camera_driver)/launch/nist_image_proc.launch"/>
+
+  <node pkg="image_view" type="image_view" name="Left_Image_Color">
+    <remap from="image" to="B24/image_color"/>
+  </node>
+
+  <node pkg="image_view" type="image_view" name="Right_Image_Color">
+    <remap from="image" to="B21/image_color"/>
+  </node>
+
+  
+
+</launch>

@@ -1,0 +1,10 @@
+<launch>
+   <!-- display the rois after training -->
+   <node pkg="roiViewer" type="roiViewer" name="roiViewer" >
+        <param name="mode" type="string" value="roi_display"/> 
+        <param name="label" type="int" value="1" />
+	<remap from ="input_image" to="HaarSvmColorImage"/>
+	<remap from ="input_rois" to="HaarSvmOutputRois"/>  
+   </node>
+
+</launch>

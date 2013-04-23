@@ -1,0 +1,24 @@
+<launch>
+
+  <!-- start the manager -->
+  <node pkg="nodelet" type="nodelet" name="stereo_proc"  args="manager"/>
+
+  <!-- Stereo processing -->
+  <node pkg="nodelet" type="nodelet" name="disparity" args="load stereo_image_proc/disparity stereo_proc">
+    <param name="approximate_sync" value="true"/>
+    <param name="prefilter_size" value="33"/>	
+    <param name="prefilter_cap" value="13"/>	
+    <param name="correlation_window_size" value="11"/>	
+    <param name="min_disparity" value="20"/>	
+    <param name="disparity_range" value="128"/>
+    <param name="uniqueness_ratio" value="2"/>		
+    <param name="texture_threshold" value="5"/>		
+    <param name="speckle_size" value="500"/>		
+    <param name="speckle_range" value="13"/>		
+    <remap from="left/image_rect"   to="/left_rect_image"/>
+    <remap from="left/camera_info"  to="/B24/camera_info" />
+    <remap from="right/image_rect"  to="/right_rect_image" />
+    <remap from="right/camera_info" to="/B21/camera_info" />
+  </node>
+
+</launch>

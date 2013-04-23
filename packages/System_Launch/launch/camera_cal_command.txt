@@ -1,0 +1,14 @@
+
+First, 
+Copy an existing calibration directory to today's date
+
+Edit the nist_stereo.launch to get its info_left.ini and
+info_right.ini from the new location
+
+Then, 
+
+roslaunch aravis_camera_driver nist_stereo.launch
+
+then 
+
+rosrun camera_calibration cameracalibrator.py --size 8x11 --square 0.09 right:=Basler_21280021/image_raw left:=Basler_21280024/image_raw left_camera:=/Basler_21280024 right_camera:=/Basler_21280021

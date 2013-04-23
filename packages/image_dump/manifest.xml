@@ -1,0 +1,17 @@
+<package>
+  <description brief="image_dump">
+
+     image_dump
+
+  </description>
+  <author>parallels</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/image_dump</url>
+  <depend package="qt_build"/>
+  <depend package="roscpp"/>
+  <depend package="image_transport"/>
+  <depend package="cv_bridge"/>
+</package>
+
+

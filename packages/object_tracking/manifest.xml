@@ -1,0 +1,21 @@
+<package>
+  <description brief="object_tracking">
+
+     object_tracking
+
+  </description>
+  <author>David Chambers</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/object_tracking</url>
+  <depend package="roscpp"/>
+  <depend package="rospy"/>
+  <depend package="image_transport"/>
+  <depend package="cv_bridge"/>
+  <depend package="dynamic_reconfigure"/>
+  <depend package="opencv2"/>
+  <depend package="roi_msgs"/>
+  <depend package="image_geometry"/>
+</package>
+
+

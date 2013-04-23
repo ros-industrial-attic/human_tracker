@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<opencv_storage>
+<eigenvectors type_id="opencv-matrix">
+  <rows>2</rows>
+  <cols>2</cols>
+  <dt>f</dt>
+  <data>
+    1. 0.
+    0. 1.</data></eigenvectors>
+<eigenvalues type_id="opencv-matrix">
+  <rows>2</rows>
+  <cols>1</cols>
+  <dt>f</dt>
+  <data>
+    1. 1.</data></eigenvalues>
+</opencv_storage>

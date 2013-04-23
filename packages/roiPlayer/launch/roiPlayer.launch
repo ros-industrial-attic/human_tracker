@@ -1,0 +1,11 @@
+<launch>
+	<node pkg="roiPlayer" type="roiPlayer" name="roiPlayer" output="screen">
+		<!-- mode = {directory, camera} -->
+		<param name="mode" type="string" value="directory"/>
+		<param name="width" type="int" value="640" />
+		<param name="height" type="int" value="480" />
+		<param name="imageFolderPath" type="string" value="/home/clewis/ros/10.17866/nist_data/labeled_data"/>
+		<param name="replayRate" type="double" value="1.0" />
+		<remap from="output_rois" to="output_rois1" />
+	</node>
+</launch>

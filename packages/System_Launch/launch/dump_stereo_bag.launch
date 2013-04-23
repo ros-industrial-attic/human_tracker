@@ -1,0 +1,34 @@
+<launch>
+
+  <arg name="bag_filename" default="test1.bag" />
+  <arg name="ImageFolder" default="$(env NIST_IMAGES)/stereo_images" />
+
+  <!-- Launch bag containing raw stereo data -->
+  <node pkg="rosbag" type="play" name="rosbag" args="--d .1 --clock $(env NIST_BAG_DIR)/$(arg bag_filename)"/> 
+
+  <!-- Stereo Process the Bag data to produce both a rectified color image, and the disparity image-->
+  <include file="$(find aravis_camera_driver)/launch/nist_image_proc.launch"/>
+  <include file="$(find aravis_camera_driver)/launch/nist_stereo_proc.launch"/>
+
+  <!-- launch node which writes the rectified left color image and disparity image to a file -->	
+  <node pkg="image_dump" type="image_dump" name="image_dump" output="screen">
+       <!-- mode = {directory} -->
+       <param name="mode" type="string" value="directory"/>
+       <param name="imageFolderPath" type="string" value="$(arg ImageFolder)"/>
+       <param name="sampleRate" type="int" value="1" />
+       <remap from="camera/rgb/image_color" to="B21/image_color" />
+       <remap from="camera/depth/disparity" to="disparity" />
+  </node>
+
+
+  <node pkg="image_view" type="image_view" name="ColorImage">
+    <remap from="image" to="B21/image_color"/>
+  </node>
+
+  <node pkg="image_view" type="disparity_view" name="DisparityImage">
+    <remap from="image" to="disparity"/>
+  </node>
+  
+
+
+</launch>

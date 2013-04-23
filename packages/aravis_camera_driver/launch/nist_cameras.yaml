@@ -1,0 +1,62 @@
+---
+
+software_sync_params:
+   software_sync: true
+   software_sync_period: 0.055 # seconds, must be greater than 0.055
+
+cameras:
+  -
+    camera_id: Basler-21280024
+    pixel_format: bayer_grbg8
+    gain_mode: off
+    gain: 70
+    exposure_mode: fixed
+    exposure: 15000
+    auto_white_balance_once: false
+    frame_rate: 20
+    digital_shift: 0
+    bin_x: 0
+    bin_y: 0
+    roi_x: 50
+    roi_y: 50
+    roi_width: 1946
+    roi_height: 986
+    AcquisitionStartTrigMode: Off
+    AcquisitionStartTrigSource: Software
+    AcquisitionStartTrigActivation: RisingEdge
+    FrameStartTrigMode: On
+    FrameStartTrigSource: Software
+    FrameStartTrigActivation: RisingEdge
+    line_selector: Out1
+    line_mode: Output
+    line_source: ExposureActive
+    user_output_selector: UserOutput1
+    info_filename: info_right.ini
+  -
+    camera_id: Basler-21280021
+
+    pixel_format: bayer_grbg8
+    gain_mode: off
+    gain: 70
+    exposure_mode: fixed
+    exposure: 15000
+    auto_white_balance_once: false
+    frame_rate: 20
+    digital_shift: 0
+    bin_x: 0
+    bin_y: 0
+    roi_x: 50
+    roi_y: 50
+    roi_width: 1946
+    roi_height: 986
+    AcquisitionStartTrigMode: Off
+    AcquisitionStartTrigSource: Software
+    AcquisitionStartTrigActivation: RisingEdge
+    FrameStartTrigMode: On
+    FrameStartTrigSource: Software
+    FrameStartTrigActivation: RisingEdge
+    line_selector: Out1
+    line_mode: Output
+    line_source: ExposureActive
+    user_output_selector: UserOutput1
+    info_filename: info_left.ini

@@ -1,0 +1,23 @@
+<package>
+  <description brief="aravis">
+
+     aravis
+
+  </description>
+  <author>Marc Alban</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/aravis</url>
+
+  <rosdep name="libglib2"/>
+  <rosdep name="gtk-doc-tools"/>
+  <rosdep name="gobject-introspection"/>
+
+  <export>
+      <cpp cflags="-I/${prefix}/include" 
+           lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib -laravis-0.2" />
+  </export>
+
+</package>
+
+

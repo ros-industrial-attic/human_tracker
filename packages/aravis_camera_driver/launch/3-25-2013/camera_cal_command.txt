@@ -1,0 +1,7 @@
+First, 
+
+roslaunch aravis_camera_driver nist_multi.launch
+
+then 
+
+rosrun camera_calibration cameracalibrator.py --size 8x11 --square 0.09 right:=/Basler_21280021/image_raw left:=/Basler_21280024/image_raw left_camera:=/Basler_21280024 right_camera:=/Basler_21280021

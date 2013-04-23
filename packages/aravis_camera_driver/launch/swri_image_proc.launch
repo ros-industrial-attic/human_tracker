@@ -1,0 +1,56 @@
+<launch>
+
+  <!-- start the manager -->
+  <node pkg="nodelet" type="nodelet" name="image_proc"  args="manager"/>
+
+  <!-- Nodelets to crop and decimate to improve rate -->
+  <node pkg="nodelet" type="nodelet" name="dec_left" args="load image_proc/crop_decimate image_proc">
+      <param name="decimation_x" value="2" />
+      <param name="decimation_y" value="2" />
+      <param name="x_offset" value="0" />
+      <!-- Top part of image is too high to include a person -->
+      <param name="y_offset" value="50" />
+      <param name="width" value="0" />
+      <param name="height" value="0" />
+      <remap from="camera" to="Basler_21135424"/>
+      <remap from="camera_out" to="/B24"/>
+  </node> 
+  <node pkg="nodelet" type="nodelet" name="dec_right" args="load image_proc/crop_decimate image_proc">
+      <param name="decimation_x" value="2" />
+      <param name="decimation_y" value="2" />
+      <param name="x_offset" value="0" />
+      <!-- Top part of image is too high to include a person -->
+      <param name="y_offset" value="50" />
+      <param name="width" value="0" />
+      <param name="height" value="0" />
+      <remap from="camera" to="Basler_21135423"/>
+      <remap from="camera_out" to="/B23"/>
+  </node> 
+
+  <!-- Nodelets to produce two separate images, color and mono, mono is for stereo proc -->
+  <node pkg="nodelet" type="nodelet" name="db_l" args="load image_proc/debayer image_proc">
+    <remap from="image_raw"   to="B24/image_raw"/>
+    <remap from="image_color" to="B24/image_color"/>
+    <remap from="image_mono"  to="B24/image_mono"/>
+  </node>
+
+  <node pkg="nodelet" type="nodelet" name="db_r" args="load image_proc/debayer image_proc">
+    <remap from="image_raw"   to="B23/image_raw"/>
+    <remap from="image_color" to="B23/image_color"/>
+    <remap from="image_mono"  to="B23/image_mono"/>
+  </node>
+
+  <!-- Color rectified images -->
+  <node pkg="nodelet" type="nodelet" name="left_rect" args="load image_proc/rectify image_proc">
+    <remap from="camera_info" to="B24/camera_info" />
+    <remap from="image_mono" to="B24/image_mono" />
+    <remap from="image_rect" to="left_rect_image" />
+  </node>  
+
+  <node pkg="nodelet" type="nodelet" name="right_rect" args="load image_proc/rectify image_proc">
+    <remap from="camera_info" to="B23/camera_info" />
+    <remap from="image_mono" to="B23/image_mono" />
+    <remap from="image_rect" to="right_rect_image" />
+  </node>  
+
+</launch>

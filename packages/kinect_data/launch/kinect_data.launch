@@ -1,0 +1,15 @@
+<launch>
+    <!-- start the kinect -->
+    <include file="$(find openni_launch)/launch/openni.launch"/> 
+   
+    <!-- Display depth image 
+    <node pkg="image_view" type="disparity_view" name="Depth_Image">
+         <remap from="image" to="camera/depth/disparity"/>
+    </node>-->
+
+    <!-- Display color images 
+    <node pkg="image_view" type="image_view" name="Color_Image">
+         <remap from="image" to="camera/rgb/image_color"/>
+    </node>-->
+
+</launch>

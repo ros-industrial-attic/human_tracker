@@ -1,0 +1,28 @@
+<launch>
+
+  <arg name="directory" default="kinect_images"/>
+
+  <!-- Launch bag containing kinect data -->
+  <arg name="bag_filename" default="test1.bag" />
+  <node pkg="rosbag" type="play" name="rosbag" args="--d .1 --clock $(env NIST_BAG_DIR)/$(arg bag_filename)"/> 
+
+  <!-- launch node which writes the rectified left color image and disparity image to a file -->	
+  <node pkg="image_dump" type="image_dump" name="image_dump" output="screen">
+       <!-- mode = {directory} -->
+       <param name="mode" type="string" value="directory"/>
+       <param name="imageFolderPath" type="string" value="$(env NIST_IMAGES)/$(arg directory)"/>
+       <param name="sampleRate" type="int" value="1" />
+       <remap from="camera/rgb/image_color" to="camera/rgb/image_color" />
+       <remap from="camera/depth/disparity" to="camera/depth/disparity" />
+  </node>
+
+  <node pkg="image_view" type="image_view" name="ColorImage">
+    <remap from="image" to="camera/rgb/image_color"/>
+  </node>
+
+  <node pkg="image_view" type="disparity_view" name="DisparityImage">
+    <remap from="image" to="camera/depth/disparity"/>
+  </node>
+
+
+</launch>

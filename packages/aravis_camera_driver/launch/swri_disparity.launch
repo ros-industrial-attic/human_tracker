@@ -1,0 +1,12 @@
+<launch>
+
+  <include file="$(find aravis_camera_driver)/launch/swri_raw_cameras.launch"/>
+  <include file="$(find aravis_camera_driver)/launch/swri_image_proc.launch"/>
+  <include file="$(find aravis_camera_driver)/launch/swri_stereo_proc.launch"/>
+
+  <!-- View Disparity -->
+  <node name="disparity_view" pkg="image_view" type="disparity_view">	
+     <remap from="image" to="/disparity"/>
+  </node> 
+
+</launch>

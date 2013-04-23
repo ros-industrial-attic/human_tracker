@@ -1,0 +1,56 @@
+#!/usr/bin/python
+
+import roslib; roslib.load_manifest('Acuity')
+import rospy
+import serial
+from Acuity.msg import LaserRange
+
+
+def acuity_serial():
+    rospy.loginfo("Creating publisher")
+    pub = rospy.Publisher('laser_dist', LaserRange)
+    rospy.loginfo("Creating serial connection")
+    s = serial.Serial(port='/dev/ttyS0', baudrate=9600, bytesize=serial.EIGHTBITS, parity=serial.PARITY_NONE, stopbits=serial.STOPBITS_ONE, timeout=1)
+    rospy.init_node('acuity_serial')
+
+    while not rospy.is_shutdown():
+        try:
+            # Waiting for bytes to be in the queue, if not readlines returns anyway
+            # without updating the value.
+            # TODO: May want to throttle this loop at some point, although I think the
+            # inWaiting call is pretty lightweight
+            while s.inWaiting() > 0:
+                now = rospy.Time.now() #capture the time now in case the next few lines take some time
+                value = s.readline()
+                #rospy.loginfo('Reading value from serial port: %s', value)
+                msg = LaserRange()
+                msg.header.stamp = now 
+                msg.range = float(value)
+                pub.publish(msg)
+            
+                
+        except ValueError as e:
+            rospy.logwarn('Value parsing error: %s', e)
+        
+        except TypeError as e:
+            rospy.logwarn('Type parsing error: %s', e)
+
+        except serial.SerialException as e:
+            rospy.logerr('Serial exception: %s', e)
+            rospy.loginfo('Attempting to close and reopen')
+            s.close()
+            s.open()
+
+        except rospy.ROSSerializationException as e:
+            rospy.logerr('Message serialization error: %s', e)
+
+
+
+
+if __name__ == '__main__':
+    try:
+        rospy.loginfo('Executing acuity_serial')
+        acuity_serial()
+    except rospy.ROSInterruptException: pass
+
+

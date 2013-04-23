@@ -1,0 +1,63 @@
+---
+
+software_sync_params:
+   software_sync: true
+   software_sync_period: 0.25 # seconds, must be greater than 0.055
+
+cameras:
+  -
+    camera_id: Basler-21280024
+    pixel_format: bayer_bggr8
+    gain_mode: auto_once
+    gain: 0
+    exposure_mode: auto_once
+    exposure: 1000
+    auto_white_balance_once: true
+    frame_rate: 4
+    digital_shift: 0
+    bin_x: 0
+    bin_y: 0
+    roi_x: 0
+    roi_y: 0
+    roi_width: 2046
+    roi_height: 1080
+    AcquisitionStartTrigMode: Off
+    AcquisitionStartTrigSource: Software
+    AcquisitionStartTrigActivation: RisingEdge
+    FrameStartTrigMode: On
+    FrameStartTrigSource: Software
+    FrameStartTrigActivation: RisingEdge
+    line_selector: Out1
+    line_mode: Output
+    line_source: ExposureActive
+    user_output_selector: UserOutput1
+    info_filename: /home/clewis/ros/10.17866/packages/aravis_camera_driver/launch/8-28-12/info_left.ini
+
+  -
+    camera_id: Basler-21280021
+
+    pixel_format: bayer_bggr8
+    gain_mode: auto_once
+    gain: 0
+    exposure_mode: auto_once
+    exposure: 1000
+    auto_white_balance_once: true
+    frame_rate: 4
+    digital_shift: 0
+    bin_x: 0
+    bin_y: 0
+    roi_x: 0
+    roi_y: 0
+    roi_width: 2046
+    roi_height: 1080
+    AcquisitionStartTrigMode: Off
+    AcquisitionStartTrigSource: Software
+    AcquisitionStartTrigActivation: RisingEdge
+    FrameStartTrigMode: On
+    FrameStartTrigSource: Software
+    FrameStartTrigActivation: RisingEdge
+    line_selector: Out1
+    line_mode: Output
+    line_source: ExposureActive
+    user_output_selector: UserOutput1
+    info_filename: /home/clewis/ros/10.17866/packages/aravis_camera_driver/launch/8-28-12/info_right.ini

@@ -1,0 +1,11 @@
+<launch>
+    <arg name="bag_filename" default="stereo_data" />
+    <arg name="topics" default="Basler_21280024/camera_info Basler_21280021/camera_info Basler_21280024/image_raw Basler_21280021/image_raw"/>
+
+
+  <include file="$(find aravis_camera_driver)/launch/nist_stereo.launch"/>
+    
+    <!-- record data to a bag file NOTE: add something similar  "export NIST_BAG_DIR=/home/nist/bags" to your .bashrc -->
+    <!--node pkg="rosbag" type="record" name="rosbagrecord" args="$(arg topics) -o $(env NIST_BAG_DIR)/$(arg bag_filename)"/-->
+
+</launch>

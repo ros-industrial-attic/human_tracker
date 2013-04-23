@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>object_tracking-RelWithDebInfo@object_tracking</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.cdt.make.core.makeBuilder</name>
+			<triggers>clean,full,incremental,</triggers>
+			<arguments>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.cleanBuildTarget</key>
+					<value>clean</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.enableCleanBuild</key>
+					<value>true</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.append_environment</key>
+					<value>true</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.stopOnError</key>
+					<value>true</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.enabledIncrementalBuild</key>
+					<value>true</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.build.command</key>
+					<value>/usr/bin/make</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.contents</key>
+					<value>org.eclipse.cdt.make.core.activeConfigSettings</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.build.target.inc</key>
+					<value>all</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.build.arguments</key>
+					<value></value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.buildLocation</key>
+					<value>/home/dchambers/NIST/ros/object_tracking</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.useDefaultBuildCmd</key>
+					<value>false</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.environment</key>
+					<value>VERBOSE=1|ROS_ROOT=/opt/ros/fuerte/share/ros|ROS_PACKAGE_PATH=/opt/ros/fuerte/share:/opt/ros/fuerte/stacks:/home/dchambers/ros/SUMET/fuerte:/home/dchambers/SUMET:/home/dchambers/ACTIVE_VISION/ros/packages:/home/dchambers/NIST/ros/:/home/dchambers/NISSAN/ros/packages|PYTHONPATH=/opt/ros/fuerte/lib/python2.7/dist-packages::/home/dchambers/ros/SUMET/fuerte/swri/marti_gps_common/src:/home/dchambers/ros/SUMET/fuerte/swri/marti_can_common/src:/home/dchambers/ros/SUMET/fuerte/swri/marti_datatypes/src:/home/dchambers/SUMET/ros/packages/sumet_common/sumet_sensor_msgs/src:/home/dchambers/SUMET/ros/packages/sumet_common/sumet_nav_msgs/src:/home/dchambers/SUMET/ros/packages/sumet_common/sumet_perception_msgs/src:/home/dchambers/SUMET/ros/packages/sumet_common/sumet_world_model_msgs/src:/home/dchambers/SUMET/ros/packages/sumet_common/sumet_common_msgs/src|PATH=/opt/ros/fuerte/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games|</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.enableFullBuild</key>
+					<value>true</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.build.target.auto</key>
+					<value>all</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.enableAutoBuild</key>
+					<value>false</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.build.target.clean</key>
+					<value>clean</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.fullBuildTarget</key>
+					<value>all</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.buildArguments</key>
+					<value></value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.build.location</key>
+					<value>/home/dchambers/NIST/ros/object_tracking</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.autoBuildTarget</key>
+					<value>all</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.core.errorOutputParser</key>
+					<value>org.eclipse.cdt.core.MakeErrorParser;org.eclipse.cdt.core.GCCErrorParser;org.eclipse.cdt.core.GASErrorParser;org.eclipse.cdt.core.GLDErrorParser;</value>
+				</dictionary>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>org.eclipse.cdt.make.core.ScannerConfigBuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.cdt.core.ccnature</nature>
+		<nature>org.eclipse.cdt.make.core.makeNature</nature>
+		<nature>org.eclipse.cdt.make.core.ScannerConfigNature</nature>
+		<nature>org.eclipse.cdt.core.cnature</nature>
+	</natures>
+	<linkedResources>
+		<link>
+			<name>[Subprojects]</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[lib] object_tracking</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[lib] object_tracking/</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[lib] object_tracking/Source Files</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[lib] object_tracking/Source Files/tracker.cpp</name>
+			<type>1</type>
+			<location>/home/dchambers/NIST/ros/object_tracking/src/tracker.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[lib] object_tracking/Source Files/features.cpp</name>
+			<type>1</type>
+			<location>/home/dchambers/NIST/ros/object_tracking/src/features.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[lib] object_tracking/Source Files/forest.cpp</name>
+			<type>1</type>
+			<location>/home/dchambers/NIST/ros/object_tracking/src/forest.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[lib] object_tracking/Source Files/particle_filter.cpp</name>
+			<type>1</type>
+			<location>/home/dchambers/NIST/ros/object_tracking/src/particle_filter.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[lib] object_tracking/Source Files/swri_tree.cpp</name>
+			<type>1</type>
+			<location>/home/dchambers/NIST/ros/object_tracking/src/swri_tree.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[lib] object_tracking/Header Files</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[lib] object_tracking/CMake Rules</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[lib] object_tracking/Resources</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] object_tracking_node</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] object_tracking_node/</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] object_tracking_node/Source Files</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] object_tracking_node/Source Files/object_tracking_node.cpp</name>
+			<type>1</type>
+			<location>/home/dchambers/NIST/ros/object_tracking/src/nodes/object_tracking_node.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] object_tracking_node/Header Files</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] object_tracking_node/CMake Rules</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] object_tracking_node/Resources</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+	</linkedResources>
+</projectDescription>

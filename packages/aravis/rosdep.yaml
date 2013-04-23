@@ -1,0 +1,9 @@
+libglib2:
+  ubuntu: libglib2.0-dev
+
+gtk-doc-tools:
+  ubuntu: gtk-doc-tools
+
+gobject-introspection:
+  ubuntu: gobject-introspection
+

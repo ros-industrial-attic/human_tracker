@@ -1,0 +1,19 @@
+<package>
+  <description brief="roi_msgs">
+
+     roi_msgs
+
+  </description>
+  <author>parallels</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/roi_msgs</url>
+  <depend package="roscpp"/>
+
+  <export>
+    <cpp cflags="-I${prefix}/include" lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib" />
+  </export>
+
+</package>
+
+

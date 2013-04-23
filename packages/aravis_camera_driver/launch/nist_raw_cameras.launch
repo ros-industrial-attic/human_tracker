@@ -1,0 +1,12 @@
+<launch>
+
+  <node pkg="aravis_camera_driver" type="basler_multi_node" name="nist_multi_node" >
+    <param name="mtu" value="1500"/>
+    <param name="config_file" value="$(find aravis_camera_driver)/launch/nist_cameras.yaml"/>
+    <param name="camera_ini_dir" value="$(find aravis_camera_driver)/launch/3-25-2013"/>
+    <param name="Frame_ID" value="Nist_Stereo_Cameras"/>
+    <remap from="/narrow_stereo/left/set_camera_info" to="Basler_21280024/set_camera_info"/>
+    <remap from="/narrow_stereo/right/set_camera_info" to="Basler_21280021/set_camera_info"/>
+  </node>
+  
+</launch>

@@ -1,0 +1,113 @@
+#!/usr/bin/python
+
+import roslib; roslib.load_manifest('Acuity')
+import rospy
+import thread
+from acuity.msg import LaserRange
+
+# Performs an extrapolation on the laser range data based
+# on the last two measurements received from the actual
+# range device.
+class AcuityExtrapFilter():
+    def __init__(self):
+        rospy.init_node('acuity_extrap_filter')
+
+        #default max extrapolation time is 1 second.  This should be OK because
+        #the update rate of the sensor is approximately 4 hz.
+        self.maxExtrapTime = rospy.get_param('max_extrap_time', rospy.Duration(1))
+        rospy.loginfo("Setting max extrapolation time value based on parameter: %s", str(self.maxExtrapTime))
+
+        #Setting the pub rate time.  The default is set based on a rate faster
+        #than the kinect rate (currently 1/30 seconds)
+        self.pubRate = rospy.get_param('pub_rate', rospy.Duration(0.02))
+        rospy.loginfo("Setting pub_rate value based on parameter: %s", str(self.pubRate))
+        self.p1 = 0.0
+        self.p2 = 0.0
+        self.t1 = rospy.Time(0)
+        self.t2 = rospy.Time(0)
+        self.lock = thread.allocate_lock()
+        self.primed = False
+
+        rospy.loginfo("Creating laser_dist subscriber")
+        self.sub = rospy.Subscriber('laser_dist', LaserRange, self.callback)
+        rospy.loginfo("Creating laser_dist_extrap publisher")
+        self.pub = rospy.Publisher('laser_dist_extrap', LaserRange)
+
+        rospy.Timer(self.pubRate, self.extrapolate)
+        
+    
+
+    def callback(self, msg):
+
+        try:
+            #rospy.loginfo("Received message: %s", str(msg))
+            self.lock.acquire()
+            if(self.primed):
+                self.p1 = self.p2
+                self.p2 = msg.range
+                self.t1 = self.t2
+                self.t2 = msg.header.stamp
+            else:
+                self.p1 = msg.range
+                self.p2 = msg.range
+                self.t1 = msg.header.stamp
+                self.t2 = msg.header.stamp
+                self.primed = True
+                rospy.loginfo("Extrapolation node is primed")
+
+            #rospy.loginfo("Updated extrapolation points: %f, %f", self.p1, self.p2)
+            #rospy.loginfo("Updated extrapolation times: %s, %s", str(self.t1), str(self.t2))
+            self.lock.release()
+        except Exception as e:
+            rospy.logerr("Message callback failed: %s, releasing lock", e)
+            self.lock.release()
+
+
+
+    def extrapolate(self, event):
+
+        # This method performs a simple extrapolation based on the
+        # previous two readings.  If it has been longer than the max
+        # extrapolation time since the last of the two readings, then
+        # nothing is published
+
+        # Minimum time different in order to calculate extrapolation (s)
+        MIN_EXTRAP_TIME = 0.001
+
+        # Capture the time now in case the lock acquire below takes some time.
+        now = rospy.Time.now()
+        self.lock.acquire()
+
+        if(self.primed):
+            try:
+                interpTime = self.t2 - self.t1
+                interpRange = self.p2 - self.p1
+                extrapTime = now - self.t2
+                if(extrapTime < self.maxExtrapTime):
+                    if(interpTime.to_sec() > MIN_EXTRAP_TIME):
+                        extrapRange = self.p2 + ((interpRange/interpTime.to_sec()) * extrapTime.to_sec())
+                    else:
+                        extrapRange = self.p2
+                    #rospy.loginfo("Extrapolation, p1: %f, p2: %f, t1: %s, t2: %s, et: %s, = ep: %f", self.p1, self.p2, str(self.t1), str(self.t2), str(extrapTime), extrapRange)
+                    msg = LaserRange()
+                    msg.header.stamp = now
+                    msg.range = extrapRange
+                    self.pub.publish(msg)
+                else:
+                    rospy.logwarn("Extrapolation time %s exceeds max %s", extrapTime, self.maxExtrapTime)
+
+            except Exception as e:
+                rospy.logwarn("Extrapolation failed: %s", e)
+        else:
+            rospy.logwarn("Extroplate not performed, not primed yet")
+        
+        self.lock.release()
+
+if __name__ == '__main__':
+    try:
+        rospy.loginfo('Executing acuity_extrap_filter')
+        AcuityExtrapFilter()
+        rospy.spin()
+    except rospy.ROSInterruptException: pass
+
+

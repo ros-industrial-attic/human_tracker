@@ -1,0 +1,15 @@
+<launch>
+	<arg name="ImageFolder" default="Images" />
+	<arg name="bag_filename" default="kinect_data_2012-11-09-09-23-34.bag"/>
+	
+        <!-- Launch the bag file -->
+	<node pkg="rosbag" type="play" name="rosbag" args="$(env NIST_BAG_DIR)/bags/$(arg bag_filename)"/>
+
+        <node pkg="image_dump" type="image_dump" name="image_dump" output="screen">
+                <!-- mode = {directory} -->
+                <param name="mode" type="string" value="directory"/>
+                <param name="imageFolderPath" type="string" value="$(NIST_IMAGES)/$(arg directory)"/>
+                <param name="sampleRate" type="int" value="1" />
+        </node>
+</launch>
+

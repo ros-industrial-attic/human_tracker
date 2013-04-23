@@ -1,0 +1,41 @@
+<launch>
+
+  <!-- Launch to training data from a directory using RoiPlayer -->
+  <arg name="directory" default="kinect_labeled_data"/>
+  <arg name="replayRate" default="7.0"/>
+  <arg name="classifierDir" default="Kinect"/>
+  <arg name="kinect_disparity_fix" default="true"/>
+
+  <node name="Roi_Player" pkg="roiPlayer" type="roiPlayer">
+        <param name="mode"            value="directory"/>
+        <param name="imageFolderPath" value="$(env NIST_IMAGES)/$(arg directory)"/>
+	<param name="replayRate"      value="$(arg replayRate)"/>	
+  </node>
+
+  <!-- Launch consisteny node -->
+  <node pkg="consistency" type="consistency_node" name="consistency" output="screen">
+	<param name="UseDefaultRois" type="bool" value="false" />
+	<!-- mode = {accumulate,train,detect} -->
+	<param name="mode" type="string" value="accumulate"/>
+	<!-- label ={0==ignore,int} -->
+	<param name="label" 	 type="int"    value="1"  />
+	<!-- YAML file name to load parameters from -->
+	<param name="yaml_filename" type="string" value="$(env NIST_CLASSIFIERS)/$(arg classifierDir)/constraints.yml"/>
+
+	<!-- if *_min == *_max then skip check -->
+	<param name="max_training_samples" type="int" value="8500"/>
+	<remap from="Color_Image" to="output_image" />
+	<remap from="Disparity_Image" to="output_disparity" />
+	<remap from="input_rois" to="output_rois" />
+        <param name="Kinect_Disparity_Fix" value="$(arg kinect_disparity_fix)"/>	
+   </node>
+
+   <!-- display the rois after training -->
+   <node pkg="roiViewer" type="roiViewer" name="roiViewer" >
+        <param name="mode" type="string" value="roi_display"/> 
+        <param name="label" type="int" value="1" />
+	<remap from ="input_image" to="output_image"/>
+	<remap from ="input_rois" to="ConsistencyOutputRois"/>  
+   </node>
+
+</launch>

@@ -1,0 +1,6 @@
+This package uses two odd packages,
+1. aravis
+2. camera_info_manager
+
+aravis is NOT the up to date aravis-0.2 library. Don't install it. Use the aravis package instead.
+camera_info_manager has one line changed in the .cpp file to allow multiple instances in the same node. 

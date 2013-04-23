@@ -1,0 +1,30 @@
+<package>
+  <description brief="aravis_camera_driver">
+
+     aravis_camera_driver
+
+  </description>
+  <author>Marc Alban</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/aravis_camera_driver</url>
+
+  <depend package="common_rosdeps"/>
+  <depend package="roscpp"/>
+  <depend package="sensor_msgs"/>
+  <depend package="dynamic_reconfigure"/>
+  <depend package="aravis"/>
+  <depend package="image_transport"/>
+  <depend package="camera_calibration_parsers"/>
+  <depend package="camera_info_manager"/>
+  <depend package="cv_bridge"/> 
+  <rosdep name="libglib2"/>
+  <rosdep name="yaml-cpp"/>
+  
+  <export>
+    <cpp lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib -laravis_camera_driver" cflags="-I${prefix}/include"/>
+  </export>
+
+</package>
+
+

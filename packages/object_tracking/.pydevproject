@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?eclipse-pydev version="1.0"?>
+
+<pydev_project>
+<pydev_property name="org.python.pydev.PYTHON_PROJECT_INTERPRETER">Default</pydev_property>
+<pydev_property name="org.python.pydev.PYTHON_PROJECT_VERSION">python 2.6</pydev_property>
+<pydev_pathproperty name="org.python.pydev.PROJECT_EXTERNAL_SOURCE_PATH">
+<path>/opt/ros/fuerte/stacks/dynamic_reconfigure/src</path>
+<path>/opt/ros/fuerte/stacks/dynamic_reconfigure/lib</path>
+<path>/opt/ros/fuerte/stacks/pluginlib/src</path>
+<path>/opt/ros/fuerte/stacks/pluginlib/lib</path>
+<path>/opt/ros/fuerte/stacks/image_common/image_transport/src</path>
+<path>/opt/ros/fuerte/stacks/image_common/image_transport/lib</path>
+<path>/home/dchambers/NIST/ros/roi_msgs/src</path>
+<path>/home/dchambers/NIST/ros/roi_msgs/lib</path>
+<path>/opt/ros/fuerte/stacks/vision_opencv/cv_bridge/src</path>
+<path>/opt/ros/fuerte/stacks/vision_opencv/cv_bridge/lib</path>
+<path>/home/dchambers/NIST/ros/object_tracking/src</path>
+<path>/home/dchambers/NIST/ros/object_tracking/lib</path>
+<path>/opt/ros/fuerte/share/ros/core/mk</path>
+<path>/opt/ros/fuerte/lib/python2.7/dist-packages</path>
+<path>/home/dchambers/NIST/ros/object_tracking</path>
+<path>/home/dchambers/ros/SUMET/fuerte/swri/marti_gps_common/src</path>
+<path>/home/dchambers/ros/SUMET/fuerte/swri/marti_can_common/src</path>
+<path>/home/dchambers/ros/SUMET/fuerte/swri/marti_datatypes/src</path>
+<path>/usr/lib/python2.7</path>
+<path>/usr/lib/python2.7/plat-linux2</path>
+<path>/usr/lib/python2.7/lib-tk</path>
+<path>/usr/lib/python2.7/lib-dynload</path>
+<path>/usr/local/lib/python2.7/dist-packages</path>
+<path>/usr/lib/python2.7/dist-packages</path>
+<path>/usr/lib/python2.7/dist-packages/PIL</path>
+<path>/usr/lib/python2.7/dist-packages/gst-0.10</path>
+<path>/usr/lib/python2.7/dist-packages/gtk-2.0</path>
+<path>/usr/lib/pymodules/python2.7</path>
+<path>/usr/lib/python2.7/dist-packages/wx-2.8-gtk2-unicode</path>
+</pydev_pathproperty>
+</pydev_project>

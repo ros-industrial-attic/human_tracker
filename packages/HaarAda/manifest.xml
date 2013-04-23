@@ -1,24 +1,25 @@
 <package>
-  <description brief="consistency">
+  <description brief="HaarAda">
 
-     consistency
+     HaarAda
 
   </description>
-  <author>parallels</author>
+  <author>Christopher L. Lewis</author>
   <license>BSD</license>
   <review status="unreviewed" notes=""/>
-  <url>http://ros.org/wiki/consistency</url>
+  <url>http://ros.org/wiki/HaarAda</url>
   <depend package="roscpp"/>
   <depend package="rospy"/>
   <depend package="image_transport"/>
   <depend package="cv_bridge"/>
-  <depend package="roi_msgs" />
+  <depend package="dynamic_reconfigure"/>
   <depend package="opencv2"/>
+  <depend package="roi_msgs"/>
   <depend package="nodelet"/>
 
   <export>
     <rosbuild cmake_directory="${prefix}/cmake"/>
-    <cpp cflags="-I${prefix}/include" lflags="-L${prefix}/lib -lconsistency"/>    
+    <cpp cflags="-I${prefix}/include" lflags="-L${prefix}/lib -lHaarAda"/>    
     <nodelet plugin="${prefix}/nodelet_plugins.xml" />
   </export>
 

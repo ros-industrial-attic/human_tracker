@@ -1,0 +1,22 @@
+<launch>
+
+  <arg name="bag_filename" default="kinect_data" />
+  <arg name="topics" default="camera/rgb/image_color camera/depth/disparity /camera/depth_registered/camera_info camera/ir/camera_info camera/projector/camera_info camera/rgb/camera_info"/>
+
+  <!-- Launch the kinect node to get data -->
+  <include file="$(find openni_launch)/launch/openni.launch"/> 
+
+  <!-- Launch bag file to save data -->	
+  <!-- NOTE: uses  "export NIST_BAG_DIR=/home/nist/bags"  in .bashrc-->
+  <node pkg="rosbag" type="record" name="rosbagrecord" args="$(arg topics) -o $(env NIST_BAG_DIR)/$(arg bag_filename)"/>
+
+  <node pkg="image_view" type="image_view" name="Color_Image">
+    <remap from="image" to="camera/rgb/image_color"/>
+  </node>
+
+  <node pkg="image_view" type="disparity_view" name="Disparity_Image">
+    <remap from="image" to="camera/depth/disparity"/>
+  </node>
+
+
+</launch>

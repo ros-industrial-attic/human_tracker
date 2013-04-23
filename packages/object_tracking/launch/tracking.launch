@@ -1,0 +1,32 @@
+<launch>
+<param name="/use_sim_time" value="True" />
+
+  <!-- Play a bag file -->
+	  <node pkg="rosbag" type="play" name="rosbag" args="/home/dchambers/NIST/nist_data/kinect_data.bag -r 0.90 -s 0 --clock"/>
+			    
+	  <!-- online tracker -->
+	  <node pkg="object_tracking" name="objectWorldModel" type="tracking_node" output="screen">
+	    <remap from="disparity" to="/camera/depth/disparity" />
+	    <remap from="/left/image_rect_color" to="/camera/rgb/image_color" />
+	    <param name="/world_frame" value="/SwRI" />
+	    <param name="/object_timeout" value="6.0" />
+	 	<param name="paramPerceptionPath" value="$(find object_detection_framework)/classifiers/vehicles" />
+	 </node>
+    
+    <node pkg="image_view" type="image_view" name="track_view">
+       <remap from="image" to="tracking_image"/>
+    </node>  
+
+		  
+    <node pkg="image_view" type="disparity_view" name="disparity_view">
+      <param name="window_name" value="stereo disparity"/>
+      <param name="autosize" value="false"/>
+      <remap from="image" to="/camera/depth/disparity"/> 
+    </node> 
+
+  
+    <node pkg="image_view" type="image_view" name="spectral_projected">
+       <remap from="image" to="/camera/rgb/image_color"/>
+    </node>  
+
+</launch>

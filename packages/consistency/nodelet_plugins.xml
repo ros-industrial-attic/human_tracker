@@ -1,0 +1,10 @@
+<library path="lib/libconsistency">
+ 
+  <!-- make sure this matches: -->
+  <!--PLUGINLIB_DECLARE_CLASS(pkg,class_name,class_type,base_class_type) -->
+  <!-- class name="pkg/class_name" type="class_type" base_class_type="base_class_type" -->
+  <class name="consistency/consistencyNodelet" type="consistency::consistencyNodelet" base_class_type="nodelet::Nodelet">
+    <description>Nodelet Classifies ROIS as contaiing people or not</description>
+  </class>
+
+</library>

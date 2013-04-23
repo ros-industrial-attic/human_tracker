@@ -1,0 +1,96 @@
+<launch>
+
+  <!-- Launch to training data from a directory using RoiPlayer -->
+  <arg name="directory" default="$(env NIST_IMAGES)/labeled_data"/>
+  <arg name="replayRate" default="3."/>
+
+  <node name="Roi_Player" pkg="roiPlayer" type="roiPlayer">
+        <param name="mode"            value="directory"/>
+        <param name="imageFolderPath" value="$(arg directory)"/>
+	<param name="replayRate"      value="$(arg replayRate)"/>	
+	<param name="delayStart"      value="20"/>
+  </node>
+  <!-- Launch consisteny node -->
+  <node pkg="consistency" type="consistency_node" name="consistency" output="screen">
+	<param name="UseDefaultRois" type="bool" value="false" />
+	<!-- mode = {accumulate,train,detect} -->
+	<param name="mode" type="string" value="load"/>
+	<!-- label ={0==ignore,int} -->
+	<param name="label" 	 type="int"    value="1"  />
+	<!-- YAML file name to load parameters from -->
+	<param name="yaml_filename" type="string" value="$(find consistency)/yml/constraints.yml"/>
+
+	<!-- if *_min == *_max then skip check -->
+	<param name="max_training_samples" type="int" value="115"/>
+	<remap from="input_rois" to="output_rois" />
+	<remap from="Disparity_Image" to="output_disparity" />
+	<remap from="Color_Image" to="output_image" />
+        <param name="Kinect_Disparity_Fix" value="false"/>	
+   </node>
+
+  <!-- Launch HaarAda Node-->
+  <node name="HaarAdaNode" pkg="HaarAda" type="HaarAda174" output="screen" >	
+       <remap from="Color_Image" to="ConsistencyColorImage"/>	
+       <remap from="Disparity_Image" to="ConsistencyDisparityImage"/>
+       <remap from="input_rois" to="ConsistencyOutputRois"/>
+       <!--mode={detect,train,load,accumulate} -->
+       <param name="mode" value="load"/>
+       <param name="classifier_file" value="$(find HaarAda)/classifiers/HaarAda.xml"/>
+       <param name="num_Training_Samples" value="1000"/>
+       <param name="HaarAdaPrior" value="200.0"/>
+  </node> 
+
+
+  <!-- Launch HaarDispAda Node-->
+  <node name="HaarDispAdaNode" pkg="HaarDispAda" type="HaarDispAda174" output="screen">
+       <param name="Q_Size" value="2" />
+       <remap from="Color_Image" to="HaarAdaColorImage"/>	
+       <remap from="Disparity_Image" to="HaarAdaDisparityImage"/>
+       <remap from="input_rois" to="HaarAdaOutputRois"/>
+       <!-- mode={detect,train,load,accumulate} -->
+       <param name="mode" value="load"/>
+       <param name="classifier_file" value="$(find HaarDispAda)/classifiers/HaarDispAda.xml"/>
+       <param name="num_Training_Samples" value="1000"/>
+       <param name="HaarDispAdaPrior" value="3.0"/>
+       <param name="Kinect_Disparity_Fix" value="false"/>
+       <param name="UseMissingDataMask" value="false"/>
+  </node> 
+
+
+  <!-- Launch HaarSvm Node-->
+  <node name="HaarSvmNode" pkg="HaarSvm" type="HaarSvm8" output="screen">
+       <param name="Q_Size" value="2" />
+       <remap from="Color_Image" to="HaarDispAdaColorImage"/>	
+       <remap from="Disparity_Image" to="HaarDispAdaDisparityImage"/>
+       <remap from="input_rois" to="HaarDispAdaOutputRois"/>
+       <!-- mode={detect,train,load,accumulate} -->
+       <param name="mode" value="load"/>
+       <param name="classifier_file" value="$(find HaarSvm)/classifiers/HaarSvm.xml"/>
+       <param name="num_Training_Samples" value="1000"/>
+       <param name="HaarSvmThreshold" value="1.2"/>
+  </node> 
+
+
+  <!-- Launch HogSvm Node-->
+  <node name="HogSvmNode" pkg="HogSvm" type="HogSvm1" output="screen">	
+       <param name="Q_Size" value="2" />
+       <remap from="Color_Image" to="HaarSvmColorImage"/>	
+       <remap from="Disparity_Image" to="HaarSvmDisparityImage"/>
+       <remap from="input_rois" to="HaarSvmOutputRois"/>
+       <!-- mode={detect,train,load,accumulate} -->
+       <param name="mode" value="load"/>
+       <param name="Hog_Block_File"  value="$(find HogSvm)/classifiers/Blocks.xml"/>
+       <param name="classifier_file" value="$(find HogSvm)/classifiers/HogSvm.xml"/>
+       <param name="num_Training_Samples" value="1000"/>
+       <param name="HogSvmThreshold" value="0.75"/>
+  </node> 
+
+   <!-- display the rois -->
+   <node pkg="roiViewer" type="roiViewer" name="HaarAdaViewer" >
+        <param name="mode" type="string" value="roi_display"/> 
+        <param name="label" type="int" value="1" />
+	<remap from ="input_image" to="HogSvmColorImage"/>
+	<remap from ="input_rois" to="HogSvmOutputRois"/>  
+   </node>
+
+</launch>
