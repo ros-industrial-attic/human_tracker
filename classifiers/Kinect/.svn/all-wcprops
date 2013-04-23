@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/projects/10.17866/!svn/ver/202/classifiers/Kinect
+END
+Blocks.xml
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/projects/10.17866/!svn/ver/170/classifiers/Kinect/Blocks.xml
+END
+HaarAda.xml
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/projects/10.17866/!svn/ver/202/classifiers/Kinect/HaarAda.xml
+END
+HaarDispAda.xml
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/projects/10.17866/!svn/ver/202/classifiers/Kinect/HaarDispAda.xml
+END
+HaarSvm.xml
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/projects/10.17866/!svn/ver/202/classifiers/Kinect/HaarSvm.xml
+END
+AveHOGRoi.jpg
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/projects/10.17866/!svn/ver/170/classifiers/Kinect/AveHOGRoi.jpg
+END
+HogSvm.xml
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/projects/10.17866/!svn/ver/202/classifiers/Kinect/HogSvm.xml
+END
+constraints.yml
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/projects/10.17866/!svn/ver/198/classifiers/Kinect/constraints.yml
+END
