@@ -1,4 +1,4 @@
-Software License Agreement (BSD License)
+/*Software License Agreement (BSD License)
  
 Copyright (c) 2013, Southwest Research Institute
 All rights reserved.
