@@ -1,14 +1,16 @@
 <launch>
 
   <!-- Launch to training data from a directory using RoiPlayer -->
-  <arg name="directory" default="$(env NIST_IMAGES)/labeled_data"/>
+  <arg name="classifierDir" default="Kinect"/>
+  <arg name="directory" default="$(env NIST_IMAGES)"/>
+  <!--arg name="directory" default="$(env NIST_IMAGES)/labeled_data"/-->
   <arg name="replayRate" default="3."/>
 
   <node name="Roi_Player" pkg="roiPlayer" type="roiPlayer">
         <param name="mode"            value="directory"/>
         <param name="imageFolderPath" value="$(arg directory)"/>
 	<param name="replayRate"      value="$(arg replayRate)"/>	
-	<param name="delayStart"      value="20"/>
+	<param name="delayStart"      value="5"/>
   </node>
   <!-- Launch consisteny node -->
   <node pkg="consistency" type="consistency_node" name="consistency" output="screen">
@@ -35,7 +37,8 @@
        <remap from="input_rois" to="ConsistencyOutputRois"/>
        <!--mode={detect,train,load,accumulate} -->
        <param name="mode" value="load"/>
-       <param name="classifier_file" value="$(find HaarAda)/classifiers/HaarAda.xml"/>
+       <!--param name="classifier_file" value="$(find HaarAda)/classifiers/HaarAda.xml"/-->
+       <param name="classifier_file" value="$(env NIST_CLASSIFIERS)/$(arg classifierDir)/HaarAda.xml"/>
        <param name="num_Training_Samples" value="1000"/>
        <param name="HaarAdaPrior" value="200.0"/>
   </node> 
@@ -49,7 +52,8 @@
        <remap from="input_rois" to="HaarAdaOutputRois"/>
        <!-- mode={detect,train,load,accumulate} -->
        <param name="mode" value="load"/>
-       <param name="classifier_file" value="$(find HaarDispAda)/classifiers/HaarDispAda.xml"/>
+       <!--param name="classifier_file" value="$(find HaarDispAda)/classifiers/HaarDispAda.xml"/-->
+       <param name="classifier_file" value="$(env NIST_CLASSIFIERS)/$(arg classifierDir)/HaarDispAda.xml"/>
        <param name="num_Training_Samples" value="1000"/>
        <param name="HaarDispAdaPrior" value="3.0"/>
        <param name="Kinect_Disparity_Fix" value="false"/>
@@ -65,7 +69,8 @@
        <remap from="input_rois" to="HaarDispAdaOutputRois"/>
        <!-- mode={detect,train,load,accumulate} -->
        <param name="mode" value="load"/>
-       <param name="classifier_file" value="$(find HaarSvm)/classifiers/HaarSvm.xml"/>
+       <!--param name="classifier_file" value="$(find HaarSvm)/classifiers/HaarSvm.xml"/-->
+       <param name="classifier_file" value="$(env NIST_CLASSIFIERS)/$(arg classifierDir)/HaarSvm.xml"/>
        <param name="num_Training_Samples" value="1000"/>
        <param name="HaarSvmThreshold" value="1.2"/>
   </node> 
@@ -79,9 +84,11 @@
        <remap from="input_rois" to="HaarSvmOutputRois"/>
        <!-- mode={detect,train,load,accumulate} -->
        <param name="mode" value="load"/>
-       <param name="Hog_Block_File"  value="$(find HogSvm)/classifiers/Blocks.xml"/>
-       <param name="classifier_file" value="$(find HogSvm)/classifiers/HogSvm.xml"/>
-       <param name="num_Training_Samples" value="1000"/>
+       <!--param name="Hog_Block_File"  value="$(find HogSvm)/classifiers/Blocks.xml"/>
+       <param name="classifier_file" value="$(find HogSvm)/classifiers/HogSvm.xml"/-->
+       <param name="Hog_Block_File"  value="$(env NIST_CLASSIFIERS)/$(arg classifierDir)/Blocks.xml"/>
+       <param name="classifier_file" value="$(env NIST_CLASSIFIERS)/$(arg classifierDir)/HogSvm.xml"/>
+	<param name="num_Training_Samples" value="1000"/>
        <param name="HogSvmThreshold" value="0.75"/>
   </node> 
 
