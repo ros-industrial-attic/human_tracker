@@ -1,0 +1,16 @@
+<package>
+  <description brief="imagePublisher">
+
+     imagePublisher
+
+  </description>
+  <author>mmunaro</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/imagePublisher</url>
+  <depend package="roscpp"/>
+  <depend package="image_transport"/>
+  <depend package="cv_bridge"/>
+</package>
+
+
