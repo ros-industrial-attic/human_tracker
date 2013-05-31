@@ -74,18 +74,24 @@ class imagePublisherNode
 	// Messages to Publish
 	ros::Publisher pub_image_;
 	ros::Publisher pub_disparity_;
+	ros::Publisher pub_rgb_info_;
+	ros::Publisher pub_proj_info_;
 
     Image output_image_;
 	DisparityImage output_disparity_;
-
-	// Launch file Parameters
-	int imgWidth;
-	int imgHeight;
 
 	std::string imgFolderPath;
 
 	double replayRate;
 	int    delayStart;
+
+	// Camera info variables:
+	int imgWidth;
+	int imgHeight;
+	float cx;
+	float cy;
+	float baseline;
+	float fixed_focal_length;
 
 	int getImageFiles(std::string dir, std::vector<std::string> &files)
 	{
@@ -109,6 +115,18 @@ class imagePublisherNode
 		return 0;
 	}
 
+	void load(std::string& ymlFilename)
+	{
+		FileStorage fs(ymlFilename.c_str(),FileStorage::READ);
+
+		fs["imgHeight"]>>imgHeight;
+		fs["imgWidth"]>>imgWidth;
+		fs["cx"]>>cx;
+		fs["cy"]>>cy;
+		fs["baseline"]>>baseline;
+		fs["fixed_focal_length"]>>fixed_focal_length;
+	}
+
 	public:
 	
 	explicit imagePublisherNode(const ros::NodeHandle& nh):
@@ -123,6 +141,8 @@ class imagePublisherNode
 		// Published Messages
 		pub_image_=node_.advertise<Image>("/camera/rgb/image_color",4);
 		pub_disparity_=node_.advertise<DisparityImage>("/camera/depth/disparity",4);
+		pub_rgb_info_=node_.advertise<sensor_msgs::CameraInfo>("/camera/depth_registered/camera_info",4);
+		pub_proj_info_=node_.advertise<sensor_msgs::CameraInfo>("/camera/projector/camera_info",4);
 
 		std::string imgName;
 		std::string disName;
@@ -136,6 +156,49 @@ class imagePublisherNode
 		//Create a vector of .jpg image file names
 		std::vector<std::string>files=std::vector<std::string>();
 		getImageFiles(imgFolderPath,files);
+
+		// Read camera_info parameters from yml file:
+		string cameraInfoFilename;
+		node_.param(ros::this_node::getName() +"/cameraInfoFilename", cameraInfoFilename , std::string("."));  //default filename for camera info
+		load(cameraInfoFilename);
+
+        // Create camera_info messages:
+        sensor_msgs::CameraInfoPtr rgb_info_msg(new sensor_msgs::CameraInfo());     // rgb camera info message
+        rgb_info_msg->header.frame_id = "/camera_rgb_optical_frame";
+        rgb_info_msg->height = imgHeight;
+        rgb_info_msg->width = imgWidth;
+        rgb_info_msg->distortion_model = "plumb_bob";
+        rgb_info_msg->D.resize(5,0.0);
+        rgb_info_msg->K[0] = fixed_focal_length;
+        rgb_info_msg->K[4] = fixed_focal_length;
+        rgb_info_msg->K[2] = cx;
+        rgb_info_msg->K[5] = cy;
+        rgb_info_msg->K[8] = 1.0;
+        rgb_info_msg->P[0] = fixed_focal_length;
+        rgb_info_msg->P[5] = fixed_focal_length;
+        rgb_info_msg->P[2] = cx;
+        rgb_info_msg->P[6] = cy;
+        rgb_info_msg->P[10] = 1.0;
+        rgb_info_msg->R[0] = 1.0;
+        rgb_info_msg->R[4] = 1.0;
+        rgb_info_msg->R[8] = 1.0;
+
+        sensor_msgs::CameraInfoPtr proj_info_msg(new sensor_msgs::CameraInfo());	// projector camera info message
+        proj_info_msg->header.frame_id = "/camera_depth_optical_frame";
+        proj_info_msg->height = imgHeight;
+        proj_info_msg->width = imgWidth;
+        proj_info_msg->distortion_model = "plumb_bob";
+        proj_info_msg->D.resize(5,0.0);
+        proj_info_msg->P[0] = 1.0;
+        proj_info_msg->P[3] = -baseline;
+
+        // Display published camera info parameters:
+		ROS_ERROR("imgWidth: %d", imgWidth);
+		ROS_ERROR("imgHeight: %d", imgHeight);
+		ROS_ERROR("cx: %f", cx);
+		ROS_ERROR("cy: %f", cy);
+		ROS_ERROR("baseline: %f", baseline);
+		ROS_ERROR("fixed_focal_length: %f", fixed_focal_length);
 
 		// wait for a while if desired before publishing
 		if(delayStart>0){
@@ -206,6 +269,10 @@ class imagePublisherNode
 			pub_image_.publish(cv_ptr->toImageMsg());
 			ROS_INFO("%s","PUBLISHED: imagePublisher->disparity_msg");
 			pub_disparity_.publish(disp_msg);
+			ROS_INFO("%s","PUBLISHED: imagePublisher->rgb_camera_info_msg");
+			pub_rgb_info_.publish(rgb_info_msg);
+			ROS_INFO("%s","PUBLISHED: imagePublisher->projector_camera_info_msg");
+			pub_proj_info_.publish(proj_info_msg);
 
 			//Replay Rate is the number of messages per second
 			ros::spinOnce();
@@ -223,7 +290,7 @@ int main(int argc, char **argv)
 	ros::NodeHandle n;
 	imagePublisherNode imagePublisherNode(n);
 	ros::spin();
-	
+
 	return 0;
 }
 
