@@ -1,8 +1,6 @@
 <launch>
 
   <!-- Dataset parameters -->
-  <arg name="image_topic" default="camera/rgb/image_color" />
-  <arg name="depth_topic" default="camera/depth/disparity" />
   <arg name="classifierDir" default="Kinect"/>
   <!--arg name="classifierDir" default="Stereo"/-->
   <arg name="cameraInfoFilename" default="$(env NIST_CLASSIFIERS)/$(arg classifierDir)/cameraInfo.yml"/>

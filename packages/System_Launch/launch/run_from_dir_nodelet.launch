@@ -1,0 +1,121 @@
+<launch>
+
+  <!-- Dataset parameters -->
+ <arg name="classifierDir" default="Kinect"/>
+  <!--arg name="classifierDir" default="Stereo"/-->
+  <arg name="cameraInfoFilename" default="$(env NIST_CLASSIFIERS)/$(arg classifierDir)/cameraInfo.yml"/>
+  <arg name="directory" default="$(env NIST_IMAGES)"/>
+  <arg name="replayRate" default="10."/>
+  
+  <!-- Play files from folder -->
+  <node name="ImagePublisher" pkg="imagePublisher" type="imagePublisher">
+    <param name="imageFolderPath" value="$(arg directory)"/>
+    <param name="replayRate"      value="$(arg replayRate)"/>
+    <param name="cameraInfoFilename"      value="$(arg cameraInfoFilename)"/>	
+	<param name="delayStart"      value="0"/>
+  </node>
+  
+  <!--launch the nodelet manager -->
+  <node  pkg="nodelet" type="nodelet" name="MNode" args="manager" />	
+
+  <!-- Launch consistency nodelet -->
+  <node  pkg="nodelet" type="nodelet" name="Cons" args="load consistency/consistencyNodelet MNode" output="screen">	
+	<param name="Q_Size" value="2" />
+	<param name="UseDefaultRois" type="bool" value="true" />
+	<param name="mode" value="load"/>
+	<param name="label" 	 type="int"    value="1"  />
+	<param name="yaml_filename" type="string" value="$(env NIST_CLASSIFIERS)/$(arg classifierDir)/constraints.yml"/>
+	<param name="max_training_samples" type="int" value="115"/>
+        <param name="Kinect_Disparity_Fix" value="true"/>	
+	<remap from="input_rois" to="output_rois" />
+	<remap from="Color_Image" to="/camera/rgb/image_color" />
+	<remap from="Disparity_Image" to="/camera/depth/disparity" />
+   </node>
+
+   <!-- Launch HaarAda Nodelet-->
+   <node  pkg="nodelet" type="nodelet" name="HaarAda" args="load HaarAda/haarada_nodelet MNode" output="screen">	
+       <remap from="Color_Image" to="ConsistencyColorImage"/>	
+       <remap from="Disparity_Image" to="ConsistencyDisparityImage"/>
+       <remap from="input_rois" to="ConsistencyOutputRois"/>
+       <param name="classifier_file" value="$(env NIST_CLASSIFIERS)/$(arg classifierDir)/HaarAda.xml"/>
+       <rosparam>
+          RemoveOverlappingRois: true
+          Q_Size: 2
+          mode: load
+          num_Training_Samples: 350
+          HaarAdaPrior: 7.5
+       </rosparam>
+   </node> 
+
+
+   <!-- Launch HaarDispAda Nodelet -->
+   <node  pkg="nodelet" type="nodelet" name="HaarDispAda" args="load HaarDispAda/haardispada_nodelet MNode" output="screen">	
+       <remap from="Color_Image" to="HaarAdaColorImage"/>	
+       <remap from="Disparity_Image" to="HaarAdaDisparityImage"/>
+       <remap from="input_rois" to="HaarAdaOutputRois"/>
+       <param name="classifier_file" value="$(env NIST_CLASSIFIERS)/$(arg classifierDir)/HaarDispAda.xml"/>
+       <rosparam>
+           Q_Size: 1
+           mode: load
+           num_Training_Samples: 350
+           HaarDispAdaPrior: 7.5
+           Kinect_Disparity_Fix: false
+           UseMissingDataMask: false
+       </rosparam>
+   </node>  
+
+
+   <!-- Launch HaarSvm Nodelet -->
+   <node  pkg="nodelet" type="nodelet" name="HaarSvm" args="load HaarSvm/haarsvm_nodelet MNode" output="screen">	
+       <remap from="Color_Image" to="HaarDispAdaColorImage"/>	
+       <remap from="Disparity_Image" to="HaarDispAdaDisparityImage"/>
+       <remap from="input_rois" to="HaarDispAdaOutputRois"/>
+       <param name="classifier_file" value="$(env NIST_CLASSIFIERS)/$(arg classifierDir)/HaarSvm.xml"/>
+       <rosparam>
+          Q_Size: 1
+          mode: load
+          num_Training_Samples: 350
+          HaarSvmThreshold: -0.5
+       </rosparam>
+    </node> 
+
+
+   <!-- Launch HogSvm Nodelet -->
+   <node  pkg="nodelet" type="nodelet" name="HogSvm" args="load HogSvm/hogsvm_nodelet MNode" output="screen">	
+       <param name="Q_Size" value="2" />
+       <remap from="Color_Image" to="HaarSvmColorImage"/>	
+       <remap from="Disparity_Image" to="HaarSvmDisparityImage"/>
+       <remap from="input_rois" to="HaarSvmOutputRois"/>
+       <param name="mode" value="load"/>
+       <param name="Hog_Block_File"  value="$(env NIST_CLASSIFIERS)/$(arg classifierDir)/Blocks.xml"/>
+       <param name="classifier_file" value="$(env NIST_CLASSIFIERS)/$(arg classifierDir)/HogSvm.xml"/>
+       <param name="Ave_Roi_File" value="$(env NIST_CLASSIFIERS)/$(arg classifierDir)/AveHOGRoi.jpg"/>
+       <param name="num_Training_Samples" value="1000"/>
+       <param name="HogSvmThreshold" value="0.0"/>
+       <param name="Save_Average_Roi" value="false"/>
+   </node> 
+
+   <!-- display the rois -->
+   <node pkg="roiViewer" type="roiViewer" name="HaarAdaViewer" >
+        <param name="mode" type="string" value="roi_display"/> 
+        <param name="label" type="int" value="1" />
+	<remap from ="input_image" to="HogSvmColorImage"/>
+	<remap from ="input_rois" to="HogSvmOutputRois"/>  
+   </node>
+   
+     <!-- Launch Tracking Node-->
+  <node name="TrackNode" pkg="object_tracking" type="object_tracking_node" output="screen">	
+       <param name="Q_Size" value="2" />
+       <remap from="Color_Image" to="HogSvmColorImage"/>	
+       <remap from="Disparity_Image" to="HogSvmDisparityImage"/>
+       <remap from="input_rois" to="HogSvmOutputRois"/>
+       <remap from="l_camera_info" to="camera/depth_registered/camera_info"/>
+       <remap from="r_camera_info" to="camera/projector/camera_info"/>
+       <param name="Filter_Dir" value="$(find object_tracking)/perception_data" />
+       <param name="Calculate_Covariance" value="true" />
+       <!--param name="CSV_Filename" value="none" /-->
+       <param name="CSV_Filename" value="/home/nist/test1.csv" />
+       <param name="Show_Images" value="true" />
+  </node> 
+
+</launch>
