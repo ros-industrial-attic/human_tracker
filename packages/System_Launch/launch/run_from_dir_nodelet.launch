@@ -1,7 +1,7 @@
 <launch>
 
   <!-- Dataset parameters -->
- <arg name="classifierDir" default="Kinect"/>
+  <arg name="classifierDir" default="Kinect"/>
   <!--arg name="classifierDir" default="Stereo"/-->
   <arg name="cameraInfoFilename" default="$(env NIST_CLASSIFIERS)/$(arg classifierDir)/cameraInfo.yml"/>
   <arg name="directory" default="$(env NIST_IMAGES)"/>
@@ -12,7 +12,8 @@
     <param name="imageFolderPath" value="$(arg directory)"/>
     <param name="replayRate"      value="$(arg replayRate)"/>
     <param name="cameraInfoFilename"      value="$(arg cameraInfoFilename)"/>	
-	<param name="delayStart"      value="0"/>
+    <param name="delayStart"      value="0"/>
+    <param name="images_with_timestamp"      value="true"/>
   </node>
   
   <!--launch the nodelet manager -->

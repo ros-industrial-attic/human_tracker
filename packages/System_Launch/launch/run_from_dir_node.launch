@@ -9,10 +9,11 @@
   
   <!-- Play files from folder -->
   <node name="ImagePublisher" pkg="imagePublisher" type="imagePublisher">
-        <param name="imageFolderPath" value="$(arg directory)"/>
-        <param name="replayRate"      value="$(arg replayRate)"/>
-        <param name="cameraInfoFilename"      value="$(arg cameraInfoFilename)"/>	
-	    <param name="delayStart"      value="0"/>
+    <param name="imageFolderPath" value="$(arg directory)"/>
+    <param name="replayRate"      value="$(arg replayRate)"/>
+    <param name="cameraInfoFilename"      value="$(arg cameraInfoFilename)"/>	
+    <param name="delayStart"      value="0"/>
+    <param name="images_with_timestamp"      value="true"/>
   </node>
   
   <!-- Launch consisteny node -->

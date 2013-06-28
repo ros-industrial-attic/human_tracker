@@ -80,18 +80,19 @@ class imagePublisherNode
     Image output_image_;
 	DisparityImage output_disparity_;
 
-	std::string imgFolderPath;
+	std::string imgFolderPath_;
 
-	double replayRate;
-	int    delayStart;
+	double replayRate_;
+	int    delayStart_;
+	bool images_with_timestamp_;
 
 	// Camera info variables:
-	int imgWidth;
-	int imgHeight;
-	float cx;
-	float cy;
-	float baseline;
-	float fixed_focal_length;
+	int imgWidth_;
+	int imgHeight_;
+	float cx_;
+	float cy_;
+	float baseline_;
+	float fixed_focal_length_;
 
 	int getImageFiles(std::string dir, std::vector<std::string> &files)
 	{
@@ -119,12 +120,12 @@ class imagePublisherNode
 	{
 		FileStorage fs(ymlFilename.c_str(),FileStorage::READ);
 
-		fs["imgHeight"]>>imgHeight;
-		fs["imgWidth"]>>imgWidth;
-		fs["cx"]>>cx;
-		fs["cy"]>>cy;
-		fs["baseline"]>>baseline;
-		fs["fixed_focal_length"]>>fixed_focal_length;
+		fs["imgHeight"]>>imgHeight_;
+		fs["imgWidth"]>>imgWidth_;
+		fs["cx"]>>cx_;
+		fs["cy"]>>cy_;
+		fs["baseline"]>>baseline_;
+		fs["fixed_focal_length"]>>fixed_focal_length_;
 	}
 
 	public:
@@ -132,11 +133,12 @@ class imagePublisherNode
 	explicit imagePublisherNode(const ros::NodeHandle& nh):
 	node_(nh)
 	{
-		imgWidth = 0;
-		imgHeight =0;
-		imgFolderPath = ".";
-		replayRate = 1.0;
-		delayStart  = 0;
+		imgWidth_ = 0;
+		imgHeight_ =0;
+		imgFolderPath_ = ".";
+		replayRate_ = 1.0;
+		delayStart_  = 0;
+		images_with_timestamp_ = false;
 
 		// Published Messages
 		pub_image_=node_.advertise<Image>("/camera/rgb/image_color",4);
@@ -147,15 +149,16 @@ class imagePublisherNode
 		std::string imgName;
 		std::string disName;
 		std::string filename;
-		node_.param(ros::this_node::getName()+"/imageFolderPath",imgFolderPath, std::string("."));
-		ROS_INFO("Image Folder Path: %s",imgFolderPath.c_str());
-		node_.param(ros::this_node::getName()+"/replayRate",replayRate,1.0);
-		ROS_INFO("Image Replay Rate: %g",replayRate);
-		node_.param(ros::this_node::getName()+"/delayStart",delayStart,0);
+		node_.param(ros::this_node::getName()+"/imageFolderPath",imgFolderPath_, std::string("."));
+		ROS_INFO("Image Folder Path: %s",imgFolderPath_.c_str());
+		node_.param(ros::this_node::getName()+"/replayRate",replayRate_,1.0);
+		ROS_INFO("Image Replay Rate: %g",replayRate_);
+		node_.param(ros::this_node::getName()+"/delayStart",delayStart_,0);
+		node_.param(ros::this_node::getName()+"/images_with_timestamp",images_with_timestamp_,false);
 
 		//Create a vector of .jpg image file names
 		std::vector<std::string>files=std::vector<std::string>();
-		getImageFiles(imgFolderPath,files);
+		getImageFiles(imgFolderPath_,files);
 
 		// Read camera_info parameters from yml file:
 		string cameraInfoFilename;
@@ -165,19 +168,19 @@ class imagePublisherNode
         // Create camera_info messages:
         sensor_msgs::CameraInfoPtr rgb_info_msg(new sensor_msgs::CameraInfo());     // rgb camera info message
         rgb_info_msg->header.frame_id = "/camera_rgb_optical_frame";
-        rgb_info_msg->height = imgHeight;
-        rgb_info_msg->width = imgWidth;
+        rgb_info_msg->height = imgHeight_;
+        rgb_info_msg->width = imgWidth_;
         rgb_info_msg->distortion_model = "plumb_bob";
         rgb_info_msg->D.resize(5,0.0);
-        rgb_info_msg->K[0] = fixed_focal_length;
-        rgb_info_msg->K[4] = fixed_focal_length;
-        rgb_info_msg->K[2] = cx;
-        rgb_info_msg->K[5] = cy;
+        rgb_info_msg->K[0] = fixed_focal_length_;
+        rgb_info_msg->K[4] = fixed_focal_length_;
+        rgb_info_msg->K[2] = cx_;
+        rgb_info_msg->K[5] = cy_;
         rgb_info_msg->K[8] = 1.0;
-        rgb_info_msg->P[0] = fixed_focal_length;
-        rgb_info_msg->P[5] = fixed_focal_length;
-        rgb_info_msg->P[2] = cx;
-        rgb_info_msg->P[6] = cy;
+        rgb_info_msg->P[0] = fixed_focal_length_;
+        rgb_info_msg->P[5] = fixed_focal_length_;
+        rgb_info_msg->P[2] = cx_;
+        rgb_info_msg->P[6] = cy_;
         rgb_info_msg->P[10] = 1.0;
         rgb_info_msg->R[0] = 1.0;
         rgb_info_msg->R[4] = 1.0;
@@ -185,28 +188,28 @@ class imagePublisherNode
 
         sensor_msgs::CameraInfoPtr proj_info_msg(new sensor_msgs::CameraInfo());	// projector camera info message
         proj_info_msg->header.frame_id = "/camera_depth_optical_frame";
-        proj_info_msg->height = imgHeight;
-        proj_info_msg->width = imgWidth;
+        proj_info_msg->height = imgHeight_;
+        proj_info_msg->width = imgWidth_;
         proj_info_msg->distortion_model = "plumb_bob";
         proj_info_msg->D.resize(5,0.0);
         proj_info_msg->P[0] = 1.0;
-        proj_info_msg->P[3] = -baseline;
+        proj_info_msg->P[3] = -baseline_;
 
         // Display published camera info parameters:
-		ROS_ERROR("imgWidth: %d", imgWidth);
-		ROS_ERROR("imgHeight: %d", imgHeight);
-		ROS_ERROR("cx: %f", cx);
-		ROS_ERROR("cy: %f", cy);
-		ROS_ERROR("baseline: %f", baseline);
-		ROS_ERROR("fixed_focal_length: %f", fixed_focal_length);
+		ROS_ERROR("imgWidth: %d", imgWidth_);
+		ROS_ERROR("imgHeight: %d", imgHeight_);
+		ROS_ERROR("cx: %f", cx_);
+		ROS_ERROR("cy: %f", cy_);
+		ROS_ERROR("baseline: %f", baseline_);
+		ROS_ERROR("fixed_focal_length: %f", fixed_focal_length_);
 
 		// wait for a while if desired before publishing
-		if(delayStart>0){
-			ROS_INFO("DelayStart: %d",delayStart);
-			boost::this_thread::sleep(boost::posix_time::seconds(delayStart));
+		if(delayStart_>0){
+			ROS_INFO("DelayStart: %d",delayStart_);
+			boost::this_thread::sleep(boost::posix_time::seconds(delayStart_));
 		}
 
-		ros::Rate loop_rate(replayRate);
+		ros::Rate loop_rate(replayRate_);
 
 		//For each image.jpg file
 		for(unsigned int i=0; i<files.size();i++)
@@ -216,14 +219,22 @@ class imagePublisherNode
 			// Example dis filename 1352474617911069665_disparity.jpg
 
 			filename = files[i];
-			imgName = imgFolderPath +"/" +filename;
-			disName = imgFolderPath +"/" +filename.substr(0,filename.size()-9)+"disparity.jpg";
+			imgName = imgFolderPath_ +"/" +filename;
+			disName = imgFolderPath_ +"/" +filename.substr(0,filename.size()-9)+"disparity.jpg";
 
 			cv_bridge::CvImagePtr cv_ptr(new cv_bridge::CvImage);
 			cv_ptr->encoding = "bgr8";
 			cv_ptr->image=cv::imread(imgName, CV_LOAD_IMAGE_COLOR);
-			cv_ptr->header.stamp=ros::Time::now();
 			cv_ptr->header.frame_id=imgName.c_str();
+			if (images_with_timestamp_)
+			{
+			  // Read time stamp from image name:
+			  uint32_t sec = std::atoi(filename.substr(0, 10).c_str());
+			  uint32_t nsec = std::atoi(filename.substr(10, 9).c_str());
+			  cv_ptr->header.stamp=ros::Time(sec, nsec);
+			}
+			else
+		    cv_ptr->header.stamp=ros::Time::now();
 
 			//Generate disparity Msg
 			ROS_INFO("Roi disparity file %s",disName.c_str());
