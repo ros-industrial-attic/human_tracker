@@ -110,6 +110,7 @@
        <param name="Filter_Dir" value="$(find object_tracking)/perception_data" />
        <param name="Calculate_Covariance" value="false" />
        <param name="CSV_Filename" value="none" />
+       <param name="Write_image_results" value="true" />
   </node> 
 
 </launch>

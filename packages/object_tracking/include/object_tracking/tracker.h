@@ -154,6 +154,13 @@ using namespace std;
     double compute_speed();
 
     /**
+     * @brief return a bounding box in the image from 3D coordinates
+     * @param[in] xz X and Z coordinates in 3D
+     * @retval Rect containing bounding box coordinates in the image
+     */
+    cv::Rect xz_to_box(cv::Point2f xz);
+
+    /**
      * @brief return the estimated y-location of the object
      * @retval estimated y-location of object
      */
@@ -186,7 +193,6 @@ using namespace std;
     void make_xz_map(cv::Mat& disp, cv::Rect* roi = NULL);
     void make_xz_map_weighted(cv::Mat& image, cv::Mat& disp, cv::Rect* roi);
     void make_object_hist(cv::Mat& image, cv::Mat& disp, cv::Point maxLoc);
-    cv::Rect xz_to_box(cv::Point2f xz);
   };
 
 

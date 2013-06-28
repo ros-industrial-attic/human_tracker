@@ -78,13 +78,13 @@
           num_Training_Samples: 350
           HaarSvmThreshold: -0.5
        </rosparam>
-    </node> 
+    </node> bisogna dire che solo alcune vengono visualizzate 
 
 
    <!-- Launch HogSvm Nodelet -->
    <node  pkg="nodelet" type="nodelet" name="HogSvm" args="load HogSvm/hogsvm_nodelet MNode" output="screen">	
        <param name="Q_Size" value="2" />
-       <remap from="Color_Image" to="HaarSvmColorImage"/>	
+       <remap from="Color_Image" to="HaarSvmColorImage"/>	calculate
        <remap from="Disparity_Image" to="HaarSvmDisparityImage"/>
        <remap from="input_rois" to="HaarSvmOutputRois"/>
        <param name="mode" value="load"/>
@@ -115,8 +115,9 @@
        <param name="Filter_Dir" value="$(find object_tracking)/perception_data" />
        <param name="Calculate_Covariance" value="true" />
        <!--param name="CSV_Filename" value="none" /-->
-       <param name="CSV_Filename" value="/home/nist/test1.csv" />
+       <param name="CSV_Filename" value="/home/matteo/test1.csv" />
        <param name="Show_Images" value="true" />
+       <param name="Write_image_results" value="true" />
   </node> 
 
 </launch>

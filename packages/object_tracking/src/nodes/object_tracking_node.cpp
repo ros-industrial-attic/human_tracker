@@ -136,6 +136,7 @@ private:
   bool calculate_covariance_;
   bool show_images_;
   int max_objects_;
+  bool write_image_results_;
 
 public:
 
@@ -180,6 +181,10 @@ public:
       show_images_ = true; // don't calculate by default
     }
 
+    if(!node_.getParam(nn + "/Write_image_results", write_image_results_)){
+    	write_image_results_ = false; // don't publish by default
+    }
+
     if(csv_filename_ != "none")
     {
       log_file_.open(csv_filename_.c_str(), std::ios_base::out);
@@ -198,7 +203,19 @@ public:
           "Ysigma" << "," <<
           "Zsigma" << "," <<
           "ROIwidth" << "," <<
-          "ROIheight" << std::endl;
+          "ROIheight";
+
+          if (write_image_results_)
+          {
+            log_file_ << "," <<
+                "bbox_2D_x" << "," <<
+                "bbox_2D_y" << "," <<
+                "bbox_2D_width" << "," <<
+                "bbox_2D_height";
+          }
+
+       log_file_ << std::endl;
+
     }
 
     // Published Messages
@@ -214,10 +231,10 @@ public:
 
     // Sync the Synchronizer
     approximate_sync_.reset(new ApproximateSync(ApproximatePolicy(qs),
-						sub_image_, sub_disparity_, sub_rois_));
+            sub_image_, sub_disparity_, sub_rois_));
 
     approximate_sync_->registerCallback(boost::bind(&ObjectTrackingNode::imageCb,
-						    this,_1,_2,_3));
+                this,_1,_2,_3));
 
     camera_info_sync_.reset(new ApproximateSync2(ApproximatePolicy2(qs),
             l_camera_info_, r_camera_info_));
@@ -296,7 +313,7 @@ public:
       string nn = ros::this_node::getName();
       double fixed_focal_length;
       if(!node_.getParam(nn + "/FixedFocalLength", fixed_focal_length)){
-	fixed_focal_length = l_info.K[0]/divisor; // fx
+  fixed_focal_length = l_info.K[0]/divisor; // fx
       }
       Q_.at<double>(2,3) = fixed_focal_length; // fx
       ROS_ERROR("using focal length of %lf",fixed_focal_length);
@@ -308,8 +325,8 @@ public:
 
 
   void imageCb(const ImageConstPtr& image_msg,
-	       const DisparityImageConstPtr& disparity_msg,
-	       const RoisConstPtr& rois_msg){
+         const DisparityImageConstPtr& disparity_msg,
+         const RoisConstPtr& rois_msg){
 
     bool label_all;
     vector<Rect> R_out;
@@ -335,10 +352,10 @@ public:
     // check encoding and create an intensity image from disparity image
     assert(disparity_msg->image.encoding == image_encodings::TYPE_32FC1);
     cv::Mat disp1(disparity_msg->image.height,
-			    disparity_msg->image.width,
-			    CV_32F,
-			    (float*) &disparity_msg->image.data[0],
-			    disparity_msg->image.step);
+          disparity_msg->image.width,
+          CV_32F,
+          (float*) &disparity_msg->image.data[0],
+          disparity_msg->image.step);
     disp = disp1;
 
     // Estimate angle initially to make sure it is within tolerance
@@ -370,8 +387,8 @@ public:
     int finished = 0;
     for(int i = 0; i < trackers_.size(); i++)
     {
-    	service_.post(boost::bind(&ObjectTrackingNode::update_task, this, i, 0.05, &finished)); // post task
-    	threads++;
+      service_.post(boost::bind(&ObjectTrackingNode::update_task, this, i, 0.05, &finished)); // post task
+      threads++;
     }
 
     // wait for all jobs to finish
@@ -390,7 +407,7 @@ public:
     // Draw all of the boxes
     for(int i = 0; i < trackers_.size(); i++)
     {
-    	trackers_[i]->draw_box(image,cv::Scalar(255));
+      trackers_[i]->draw_box(image,cv::Scalar(255));
     }
 
     if(show_images_)
@@ -407,68 +424,68 @@ public:
 
   void match_detections()
   {
-	  if(trackers_.empty() || detections_.empty()) return;
+    if(trackers_.empty() || detections_.empty()) return;
 
-	  cv::Mat score;
-	  score = cv::Mat::zeros(detections_.size(), trackers_.size(), CV_32F);
-	  for(int i = 0; i < detections_.size(); i++)
-		  for(int j = 0; j < trackers_.size(); j++)
-			  score.at<float>(i,j) = trackers_[j]->score(image, disp, detections_[i]);
+    cv::Mat score;
+    score = cv::Mat::zeros(detections_.size(), trackers_.size(), CV_32F);
+    for(int i = 0; i < detections_.size(); i++)
+      for(int j = 0; j < trackers_.size(); j++)
+        score.at<float>(i,j) = trackers_[j]->score(image, disp, detections_[i]);
 
-	  // enter a loop of finding best match, removing detections that match well enough
-	  double maxVal;
-	  cv::Point maxLoc;
-	  cv::minMaxLoc(score, 0, &maxVal, 0, &maxLoc);
+    // enter a loop of finding best match, removing detections that match well enough
+    double maxVal;
+    cv::Point maxLoc;
+    cv::minMaxLoc(score, 0, &maxVal, 0, &maxLoc);
 
-	  while(maxVal > 5.0)
-	  {
-		  // set row and column of best match to zero and invalidate the roi
-		  score.row(maxLoc.y) = 0.0; //this detection can't be matched to two trackers
-		  //score.col(maxLoc.x) = 0.0; // commented out means the tracker may match multiple detections
-		  if(trackers_[maxLoc.x]->is_dead_ && detections_[maxLoc.y].width > 0)
-			  trackers_[maxLoc.x]->revive(image,disp,detections_[maxLoc.y]);
-		  detections_[maxLoc.y].width = 0;
-		  trackers_[maxLoc.x]->age = 0;
+    while(maxVal > 5.0)
+    {
+      // set row and column of best match to zero and invalidate the roi
+      score.row(maxLoc.y) = 0.0; //this detection can't be matched to two trackers
+      //score.col(maxLoc.x) = 0.0; // commented out means the tracker may match multiple detections
+      if(trackers_[maxLoc.x]->is_dead_ && detections_[maxLoc.y].width > 0)
+        trackers_[maxLoc.x]->revive(image,disp,detections_[maxLoc.y]);
+      detections_[maxLoc.y].width = 0;
+      trackers_[maxLoc.x]->age = 0;
 
-		  cv::minMaxLoc(score, 0, &maxVal, 0, &maxLoc);
-	  }
+      cv::minMaxLoc(score, 0, &maxVal, 0, &maxLoc);
+    }
   }
 
   void add_new()
   {
     int current_trackers = trackers_.size();
-	  for(int i = 0; i < detections_.size(); i++)
-		  if(detections_[i].width > 0) if (trackers_.size() < max_objects_)
-		  {
-		    // Make sure object couldn't be resolved to newly added object
-		    bool should_continue = false;
-		    for(int j = current_trackers; j < trackers_.size(); j++)
-		      if(trackers_[j]->score(image, disp, detections_[i]) > 9.0)
-		        should_continue = true;
-		    if(should_continue)
-		      continue;
+    for(int i = 0; i < detections_.size(); i++)
+      if(detections_[i].width > 0) if (trackers_.size() < max_objects_)
+      {
+        // Make sure object couldn't be resolved to newly added object
+        bool should_continue = false;
+        for(int j = current_trackers; j < trackers_.size(); j++)
+          if(trackers_[j]->score(image, disp, detections_[i]) > 9.0)
+            should_continue = true;
+        if(should_continue)
+          continue;
 
-			  // Create a new tracker object
-			  boost::shared_ptr<ParticleTrack> temp(new ParticleTrack());
-			  temp->initialize(image, disp, detections_[i], filter_dir_, Q_, angle_);
-			  if(temp->size_>1)
-			  {
-			    temp->uid = uid_counter_++;
-			    trackers_.push_back(temp);
-			  }
-		  }
+        // Create a new tracker object
+        boost::shared_ptr<ParticleTrack> temp(new ParticleTrack());
+        temp->initialize(image, disp, detections_[i], filter_dir_, Q_, angle_);
+        if(temp->size_>1)
+        {
+          temp->uid = uid_counter_++;
+          trackers_.push_back(temp);
+        }
+      }
   }
 
   void kill_old()
   {
-	  std::vector<boost::shared_ptr<ParticleTrack> >::iterator iter = trackers_.begin();
-	  while (iter != trackers_.end())
-	  {
-		  if(((*iter)->age > object_timeout_))
-			  iter = trackers_.erase(iter);
-		  else
-			  ++iter;
-	  }
+    std::vector<boost::shared_ptr<ParticleTrack> >::iterator iter = trackers_.begin();
+    while (iter != trackers_.end())
+    {
+      if(((*iter)->age > object_timeout_))
+        iter = trackers_.erase(iter);
+      else
+        ++iter;
+    }
   }
 
   void update_task(int idx, double dt, int* finished)
@@ -525,18 +542,38 @@ public:
     // publish message
     human_tracker_data_.publish(humans);
 
+    // Collect image bounding boxes for every track (if write_image_results_ is true):
+    roi_msgs::Rois image_results;
+    if (write_image_results_)
+    {
+    	// Compute image bounding box from 3D coordinates
+    	image_results.rois.clear();
+    	image_results.header.stamp = current_;
+    	for (unsigned int i = 0; i < humans.entries.size(); i++)
+    	{
+    	  CvRect bbox_2D = trackers_[i]->xz_to_box(cv::Point2f(humans.entries[i].personCentroidX, humans.entries[i].personCentroidY));
+
+    		roi_msgs::RoiRect entry;
+    		entry.x = bbox_2D.x;
+    		entry.y = bbox_2D.y;
+    		entry.width = bbox_2D.width;
+    		entry.height = bbox_2D.height;
+    		image_results.rois.push_back(entry);
+    	}
+    }
+
     // log data
     if(csv_filename_ != "none")
     {
       for(int i = 0; i < humans.entries.size(); i++)
       {
-	double vx = humans.entries[i].personCentroidX;
-	double vy = humans.entries[i].personCentroidY;
-	double vz = humans.entries[i].personCentroidZ;
-	double norm = sqrt(vx*vx+vy*vy+vz*vz);
-	vx = vx/norm*.12; 
-	vy = vy/norm*.12;
-	vz = vz/norm*.12;
+  double vx = humans.entries[i].personCentroidX;
+  double vy = humans.entries[i].personCentroidY;
+  double vz = humans.entries[i].personCentroidZ;
+  double norm = sqrt(vx*vx+vy*vy+vz*vz);
+  vx = vx/norm*.12;
+  vy = vy/norm*.12;
+  vz = vz/norm*.12;
         log_file_ << humans.entries[i].stamp.toNSec() << "," <<
             humans.entries[i].personID << "," <<
             humans.entries[i].personCentroidX+vx << "," <<
@@ -552,7 +589,17 @@ public:
             humans.entries[i].Ysigma << "," <<
             humans.entries[i].Zsigma << "," <<
             humans.entries[i].ROIwidth << "," <<
-            humans.entries[i].ROIheight << std::endl;
+            humans.entries[i].ROIheight;
+        if (write_image_results_)
+        {
+        	// Write image bounding boxes to file
+        	log_file_ << "," <<
+        			image_results.rois[i].x << "," <<
+        			image_results.rois[i].y << "," <<
+        			image_results.rois[i].width << "," <<
+        			image_results.rois[i].height;
+        }
+        log_file_ << std::endl;
       }
     }
   }
