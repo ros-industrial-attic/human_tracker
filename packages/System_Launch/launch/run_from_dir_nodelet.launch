@@ -97,12 +97,12 @@
    </node> 
 
    <!-- display the rois -->
-   <node pkg="roiViewer" type="roiViewer" name="HaarAdaViewer" >
+   <!--node pkg="roiViewer" type="roiViewer" name="HaarAdaViewer" >
         <param name="mode" type="string" value="roi_display"/> 
         <param name="label" type="int" value="1" />
 	<remap from ="input_image" to="HogSvmColorImage"/>
 	<remap from ="input_rois" to="HogSvmOutputRois"/>  
-   </node>
+   </node-->
    
      <!-- Launch Tracking Node-->
   <node name="TrackNode" pkg="object_tracking" type="object_tracking_node" output="screen">	

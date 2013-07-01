@@ -506,37 +506,40 @@ public:
     std::vector<boost::shared_ptr<ParticleTrack> >::iterator iter = trackers_.begin();
     while (iter != trackers_.end())
     {
-      // Output coordinate system rotated from tracker coordinate system
-      // R = [1 0 0; 0 0 1; 0 -1 0]
-      roi_msgs::HumanEntry entry;
-      entry.stamp = humans.header.stamp;
-      entry.personID = (*iter)->uid;
-      entry.personCentroidX = (*iter)->current_map_.x.at<float>(0, 0);
-      entry.personCentroidY = (*iter)->current_map_.x.at<float>(1, 0);
-      entry.personCentroidZ = -(*iter)->get_height() - 5.0*.0254; // -half avg human head height
-      entry.personBoundingBoxTopCenterX = (*iter)->current_map_.x.at<float>(0, 0);
-      entry.personBoundingBoxTopCenterY = (*iter)->current_map_.x.at<float>(1, 0);
-      entry.personBoundingBoxTopCenterZ = -(*iter)->get_height();
-      entry.ROIwidth = (*iter)->get_box_size() / Q_.at<double>(2,3)*(*iter)->get_ar();
-      entry.ROIheight = (*iter)->get_box_size() / Q_.at<double>(2,3);
-      entry.Xvelocity = (*iter)->compute_velocity().x;
-      entry.Yvelocity = (*iter)->compute_velocity().y;
-      entry.Zvelocity = 0.0;
-      if(!calculate_covariance_)
+      if (!((*iter)->is_dead_))
       {
-        entry.Xsigma = 0.0;
-        entry.Ysigma = 0.0;
-        entry.Zsigma = 0.0;
-      }
-      else
-      {
-        cv::Mat covar = (*iter)->calculate_covariance();
-        entry.Xsigma = std::sqrt(covar.at<double>(0,0));
-        entry.Ysigma = std::sqrt(covar.at<double>(1,1));
-        entry.Zsigma = 0.0;
-      }
+        // Output coordinate system rotated from tracker coordinate system
+        // R = [1 0 0; 0 0 1; 0 -1 0]
+        roi_msgs::HumanEntry entry;
+        entry.stamp = humans.header.stamp;
+        entry.personID = (*iter)->uid;
+        entry.personCentroidX = (*iter)->current_map_.x.at<float>(0, 0);
+        entry.personCentroidY = (*iter)->current_map_.x.at<float>(1, 0);
+        entry.personCentroidZ = -(*iter)->get_height() - 5.0*.0254; // -half avg human head height
+        entry.personBoundingBoxTopCenterX = (*iter)->current_map_.x.at<float>(0, 0);
+        entry.personBoundingBoxTopCenterY = (*iter)->current_map_.x.at<float>(1, 0);
+        entry.personBoundingBoxTopCenterZ = -(*iter)->get_height();
+        entry.ROIwidth = (*iter)->get_box_size() / Q_.at<double>(2,3)*(*iter)->get_ar();
+        entry.ROIheight = (*iter)->get_box_size() / Q_.at<double>(2,3);
+        entry.Xvelocity = (*iter)->compute_velocity().x;
+        entry.Yvelocity = (*iter)->compute_velocity().y;
+        entry.Zvelocity = 0.0;
+        if(!calculate_covariance_)
+        {
+          entry.Xsigma = 0.0;
+          entry.Ysigma = 0.0;
+          entry.Zsigma = 0.0;
+        }
+        else
+        {
+          cv::Mat covar = (*iter)->calculate_covariance();
+          entry.Xsigma = std::sqrt(covar.at<double>(0,0));
+          entry.Ysigma = std::sqrt(covar.at<double>(1,1));
+          entry.Zsigma = 0.0;
+        }
 
-      humans.entries.push_back(entry);
+        humans.entries.push_back(entry);
+      }
       ++iter;
     }
     // publish message
@@ -550,15 +553,18 @@ public:
     	image_results.rois.clear();
     	image_results.header.stamp = current_;
     	for (unsigned int i = 0; i < humans.entries.size(); i++)
-    	{
-    	  CvRect bbox_2D = trackers_[i]->xz_to_box(cv::Point2f(humans.entries[i].personCentroidX, humans.entries[i].personCentroidY));
+      {
+//    	  if (!(trackers_[i]->is_dead_))
+//    	  {
+          CvRect bbox_2D = trackers_[i]->xz_to_box(cv::Point2f(humans.entries[i].personCentroidX, humans.entries[i].personCentroidY));
 
-    		roi_msgs::RoiRect entry;
-    		entry.x = bbox_2D.x;
-    		entry.y = bbox_2D.y;
-    		entry.width = bbox_2D.width;
-    		entry.height = bbox_2D.height;
-    		image_results.rois.push_back(entry);
+          roi_msgs::RoiRect entry;
+          entry.x = bbox_2D.x;
+          entry.y = bbox_2D.y;
+          entry.width = bbox_2D.width;
+          entry.height = bbox_2D.height;
+          image_results.rois.push_back(entry);
+//    	  }
     	}
     }
 
