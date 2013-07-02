@@ -552,19 +552,22 @@ public:
     	// Compute image bounding box from 3D coordinates
     	image_results.rois.clear();
     	image_results.header.stamp = current_;
-    	for (unsigned int i = 0; i < humans.entries.size(); i++)
-      {
-//    	  if (!(trackers_[i]->is_dead_))
-//    	  {
-          CvRect bbox_2D = trackers_[i]->xz_to_box(cv::Point2f(humans.entries[i].personCentroidX, humans.entries[i].personCentroidY));
+    	for(int i = 0; i < trackers_.size(); i++)
+    	{
+    	  if (!(trackers_[i]->is_dead_))
+    	  {
+    	    cv::Point2f loc;
+    	    loc.x = trackers_[i]->current_map_.x.at<float>(0, 0);
+    	    loc.y = trackers_[i]->current_map_.x.at<float>(1, 0);
+    	    cv::Rect bbox_2D = trackers_[i]->xz_to_box(loc);
 
-          roi_msgs::RoiRect entry;
+    	    roi_msgs::RoiRect entry;
           entry.x = bbox_2D.x;
           entry.y = bbox_2D.y;
           entry.width = bbox_2D.width;
           entry.height = bbox_2D.height;
           image_results.rois.push_back(entry);
-//    	  }
+    	  }
     	}
     }
 
