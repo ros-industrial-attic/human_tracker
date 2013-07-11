@@ -8,7 +8,7 @@
   <!--launch the nodelet manager -->
   <node  pkg="nodelet" type="nodelet" name="MNode" args="manager" />	
 
-  <!-- Launch consisteny nodelet -->
+  <!-- Launch consistency nodelet -->
   <node  pkg="nodelet" type="nodelet" name="Cons" args="load consistency/consistencyNodelet MNode" output="screen">	
 	<param name="Q_Size" value="2" />
 	<param name="UseDefaultRois" type="bool" value="true" />
@@ -16,10 +16,11 @@
 	<param name="label" 	 type="int"    value="1"  />
 	<param name="yaml_filename" type="string" value="$(env NIST_CLASSIFIERS)/$(arg classifierDir)/constraints.yml"/>
 	<param name="max_training_samples" type="int" value="115"/>
-        <param name="Kinect_Disparity_Fix" value="true"/>	
+    <param name="Kinect_Disparity_Fix" value="true"/>	
 	<remap from="input_rois" to="output_rois" />
 	<remap from="Color_Image" to="/camera/rgb/image_color" />
-	<remap from="Disparity_Image" to="/camera/depth/disparity" />
+	<remap from="Disparity_Image" to="/camera/depth/disparity" />	
+	<param name="RemoveOverlappingRois" value="true"/>
    </node>
 
    <!-- Launch HaarAda Nodelet-->
@@ -84,7 +85,7 @@
        <param name="HogSvmThreshold" value="0.0"/>
        <param name="Save_Average_Roi" value="false"/>
    </node> 
-
+   
    <!-- display the rois -->
    <node pkg="roiViewer" type="roiViewer" name="HaarAdaViewer" >
         <param name="mode" type="string" value="roi_display"/> 

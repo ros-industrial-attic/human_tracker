@@ -20,7 +20,7 @@
 	<remap from="input_rois" to="output_rois" />
 	<remap from="Color_Image" to="/left_rect_image" />
 	<remap from="Disparity_Image" to="/disparity" />
-        <param name="Kinect_Disparity_Fix" value="false"/>	
+        <param name="Kinect_Disparity_Fix" value="false"/>	  
    </node>
 
    <!-- Launch HaarAda Node-->

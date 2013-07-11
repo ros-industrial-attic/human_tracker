@@ -17,7 +17,8 @@
 	<remap from="input_rois" to="output_rois" />
 	<remap from="Color_Image" to="/camera/rgb/image_color" />
 	<remap from="Disparity_Image" to="/camera/depth/disparity" />
-        <param name="Kinect_Disparity_Fix" value="true"/>	
+    <param name="Kinect_Disparity_Fix" value="true"/>	
+    <param name="RemoveOverlappingRois" value="true"/>
    </node>
 
    <!-- Launch HaarAda Node-->

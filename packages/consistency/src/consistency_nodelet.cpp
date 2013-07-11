@@ -100,6 +100,8 @@ namespace consistency
     ros::Publisher pub_Disparity_Image_;
 
     Rois output_rois_;
+    Rois non_overlapping_rois_;
+    bool remove_overlapping_rois_;
 
     //Define the Classifier Object
     Cten::Consistency con_;
@@ -164,28 +166,34 @@ namespace consistency
 
       // load the classifier configuration
       if(!private_node_.getParam("yaml_filename",con_.ymlFilename)){
-	ROS_ERROR("yaml_filename param not set");
+        ROS_ERROR("yaml_filename param not set");
       }
       con_.load();
 
       // The label of interest is:
       if(!private_node_.getParam("label",con_.label)){
-	ROS_ERROR("label param not set");
-	con_.label = 1;
+        ROS_ERROR("label param not set");
+        con_.label = 1;
       }
 
       // mode to start with
       if(!private_node_.getParam("mode", con_.mode)){
-	ROS_ERROR("mode param not set");
-	con_.mode = "load";
+        ROS_ERROR("mode param not set");
+        con_.mode = "load";
       }
       ROS_INFO("Selected mode: %s",con_.mode.c_str());
 
       // number of data to train with
 
       if(!private_node_.getParam("max_training_samples", con_.max_training_data)){
-	ROS_ERROR("max_training_samples param not set");
-	con_.max_training_data = 1000;
+        ROS_ERROR("max_training_samples param not set");
+        con_.max_training_data = 1000;
+      }
+
+      // flag for removing overlapping rois
+      if(!private_node_.getParam("RemoveOverlappingRois",remove_overlapping_rois_)){
+        ROS_ERROR("couldn't find RemoveOverlappingRois parameter");
+        remove_overlapping_rois_ = false;
       }
 
       if(con_.mode.compare("detect") == 0){
@@ -354,8 +362,14 @@ namespace consistency
 	output_rois_.rois.push_back(roi);
       }
 		
-      /*
-	remove_overlap_Rois(output_rois_, non_overlapping_rois_);
+    if (remove_overlapping_rois_)
+    {
+      non_overlapping_rois_.rois.clear();
+      non_overlapping_rois_.header.stamp = image_msg->header.stamp;
+      non_overlapping_rois_.header.frame_id = image_msg->header.frame_id;
+	  remove_overlap_Rois(output_rois_, non_overlapping_rois_);
+    }
+	/*
 	non_overlapping_rois_.header.stamp    = image_msg->header.stamp;
 	non_overlapping_rois_.header.frame_id = image_msg->header.frame_id;
 	int s1 = output_rois_.rois.size();
@@ -367,11 +381,19 @@ namespace consistency
 	ROS_INFO("ACCUMULATING TRAINING DATA: %5.1f%c done",percent_done,'%');
       }
       else{
-	ROS_INFO("PUBLISHED: %d Consistency ROIs", int(output_rois_.rois.size()));
 	DisparityImage d_msg;
 	d_msg = *disparity_msg;
 	d_msg.header.stamp = image_msg->header.stamp;
-	pub_rois_.publish(output_rois_);
+	if (remove_overlapping_rois_)
+	{
+      ROS_INFO("PUBLISHED: %d Consistency ROIs", int(non_overlapping_rois_.rois.size()));
+      pub_rois_.publish(non_overlapping_rois_);
+	}
+	else
+	{
+	  ROS_INFO("PUBLISHED: %d Consistency ROIs", int(output_rois_.rois.size()));
+	  pub_rois_.publish(output_rois_);
+	}
 	pub_Color_Image_.publish(image_msg);
 	pub_Disparity_Image_.publish(d_msg);
       }

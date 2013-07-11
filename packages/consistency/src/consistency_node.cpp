@@ -95,6 +95,8 @@ private:
   ros::Publisher pub_Disparity_Image_;
 
   Rois output_rois_;
+  Rois non_overlapping_rois_;
+  bool remove_overlapping_rois_;
 
   //Define the Classifier Object
   Consistency con_;
@@ -173,6 +175,11 @@ public:
     // number of data to train with
     int dm=1000;
     node_.param(ros::this_node::getName() + "/max_training_samples", con_.max_training_data, dm);
+
+    // flag for removing overlapping rois
+    if(!node_.getParam(nn + "/RemoveOverlappingRois",remove_overlapping_rois_)){
+      remove_overlapping_rois_ = false;
+    }
 
     if(mode.compare("detect") == 0){
       ROS_INFO("Starting in detection mode");
@@ -328,7 +335,13 @@ public:
       output_rois_.rois.push_back(roi);
     }
 		
-    /*
+    if (remove_overlapping_rois_)
+    {
+      non_overlapping_rois_.rois.clear();
+      non_overlapping_rois_.header.stamp = image_msg->header.stamp;
+      non_overlapping_rois_.header.frame_id = image_msg->header.frame_id;
+      remove_overlap_Rois(output_rois_, non_overlapping_rois_);
+    }/*
       remove_overlap_Rois(output_rois_, non_overlapping_rois_);
       non_overlapping_rois_.header.stamp    = image_msg->header.stamp;
       non_overlapping_rois_.header.frame_id = image_msg->header.frame_id;
@@ -341,8 +354,16 @@ public:
       ROS_INFO("ACCUMULATING TRAINING DATA: %5.1f%c done",percent_done,'%');
     }
     else{
-      ROS_INFO("PUBLISHED: %d Consistency ROIs", int(output_rois_.rois.size()));
-      pub_rois_.publish(output_rois_);
+      if (remove_overlapping_rois_)
+      {
+        ROS_INFO("PUBLISHED: %d Consistency ROIs", int(non_overlapping_rois_.rois.size()));
+        pub_rois_.publish(non_overlapping_rois_);
+      }
+      else
+      {
+        ROS_INFO("PUBLISHED: %d Consistency ROIs", int(output_rois_.rois.size()));
+        pub_rois_.publish(output_rois_);
+      }
       pub_Color_Image_.publish(image_msg);
       pub_Disparity_Image_.publish(disparity_msg);
     }
