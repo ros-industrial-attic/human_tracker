@@ -1,0 +1,16 @@
+<launch>
+
+  <arg name="directory" default="$(env NIST_IMAGES)"/>
+  <arg name="replayRate" default="10."/>
+  <arg name="cameraInfoFilename" default="$(env NIST_CLASSIFIERS)/Kinect/cameraInfo.yml"/>
+   
+  <!-- Play files from folder -->
+  <node name="pointcloudPublisher" pkg="pointcloudPublisher" type="pointcloudPublisher">
+    <param name="imageFolderPath" value="$(arg directory)"/>
+    <param name="replayRate"      value="$(arg replayRate)"/>
+    <param name="cameraInfoFilename"      value="$(arg cameraInfoFilename)"/>	
+    <param name="delayStart"      value="0"/>
+    <param name="images_with_timestamp"      value="true"/>
+  </node>
+
+</launch>

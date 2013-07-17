@@ -36,10 +36,10 @@ CMAKE_COMMAND = /usr/bin/cmake
 RM = /usr/bin/cmake -E remove -f
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /opt/ros/fuerte/stacks/unipd-ros-pkg/human_tracker/packages/imagePublisher
+CMAKE_SOURCE_DIR = /opt/ros/fuerte/stacks/unipd-ros-pkg/human_tracker/packages/pointcloudPublisher
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /opt/ros/fuerte/stacks/unipd-ros-pkg/human_tracker/packages/imagePublisher
+CMAKE_BINARY_DIR = /opt/ros/fuerte/stacks/unipd-ros-pkg/human_tracker/packages/pointcloudPublisher
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -66,9 +66,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /opt/ros/fuerte/stacks/unipd-ros-pkg/human_tracker/packages/imagePublisher/CMakeFiles /opt/ros/fuerte/stacks/unipd-ros-pkg/human_tracker/packages/imagePublisher/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /opt/ros/fuerte/stacks/unipd-ros-pkg/human_tracker/packages/pointcloudPublisher/CMakeFiles /opt/ros/fuerte/stacks/unipd-ros-pkg/human_tracker/packages/pointcloudPublisher/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /opt/ros/fuerte/stacks/unipd-ros-pkg/human_tracker/packages/imagePublisher/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /opt/ros/fuerte/stacks/unipd-ros-pkg/human_tracker/packages/pointcloudPublisher/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -161,17 +161,17 @@ clean-test-results/fast:
 .PHONY : clean-test-results/fast
 
 #=============================================================================
-# Target rules for targets named imagePublisher
+# Target rules for targets named pointcloudPublisher
 
 # Build rule for target.
-imagePublisher: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 imagePublisher
-.PHONY : imagePublisher
+pointcloudPublisher: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 pointcloudPublisher
+.PHONY : pointcloudPublisher
 
 # fast build rule for target.
-imagePublisher/fast:
-	$(MAKE) -f CMakeFiles/imagePublisher.dir/build.make CMakeFiles/imagePublisher.dir/build
-.PHONY : imagePublisher/fast
+pointcloudPublisher/fast:
+	$(MAKE) -f CMakeFiles/pointcloudPublisher.dir/build.make CMakeFiles/pointcloudPublisher.dir/build
+.PHONY : pointcloudPublisher/fast
 
 #=============================================================================
 # Target rules for targets named rosbuild_precompile
@@ -304,19 +304,34 @@ tests/fast:
 .PHONY : tests/fast
 
 # target to build an object file
-src/imagePublisher.o:
-	$(MAKE) -f CMakeFiles/imagePublisher.dir/build.make CMakeFiles/imagePublisher.dir/src/imagePublisher.o
-.PHONY : src/imagePublisher.o
+src/pointcloudPublisher.o:
+	$(MAKE) -f CMakeFiles/pointcloudPublisher.dir/build.make CMakeFiles/pointcloudPublisher.dir/src/pointcloudPublisher.o
+.PHONY : src/pointcloudPublisher.o
 
 # target to preprocess a source file
-src/imagePublisher.i:
-	$(MAKE) -f CMakeFiles/imagePublisher.dir/build.make CMakeFiles/imagePublisher.dir/src/imagePublisher.i
-.PHONY : src/imagePublisher.i
+src/pointcloudPublisher.i:
+	$(MAKE) -f CMakeFiles/pointcloudPublisher.dir/build.make CMakeFiles/pointcloudPublisher.dir/src/pointcloudPublisher.i
+.PHONY : src/pointcloudPublisher.i
 
 # target to generate assembly for a file
-src/imagePublisher.s:
-	$(MAKE) -f CMakeFiles/imagePublisher.dir/build.make CMakeFiles/imagePublisher.dir/src/imagePublisher.s
-.PHONY : src/imagePublisher.s
+src/pointcloudPublisher.s:
+	$(MAKE) -f CMakeFiles/pointcloudPublisher.dir/build.make CMakeFiles/pointcloudPublisher.dir/src/pointcloudPublisher.s
+.PHONY : src/pointcloudPublisher.s
+
+# target to build an object file
+src/pointcloud_utils.o:
+	$(MAKE) -f CMakeFiles/pointcloudPublisher.dir/build.make CMakeFiles/pointcloudPublisher.dir/src/pointcloud_utils.o
+.PHONY : src/pointcloud_utils.o
+
+# target to preprocess a source file
+src/pointcloud_utils.i:
+	$(MAKE) -f CMakeFiles/pointcloudPublisher.dir/build.make CMakeFiles/pointcloudPublisher.dir/src/pointcloud_utils.i
+.PHONY : src/pointcloud_utils.i
+
+# target to generate assembly for a file
+src/pointcloud_utils.s:
+	$(MAKE) -f CMakeFiles/pointcloudPublisher.dir/build.make CMakeFiles/pointcloudPublisher.dir/src/pointcloud_utils.s
+.PHONY : src/pointcloud_utils.s
 
 # Help Target
 help:
@@ -330,7 +345,7 @@ help:
 	@echo "... ROSBUILD_gensrv_lisp"
 	@echo "... clean-test-results"
 	@echo "... edit_cache"
-	@echo "... imagePublisher"
+	@echo "... pointcloudPublisher"
 	@echo "... rebuild_cache"
 	@echo "... rosbuild_precompile"
 	@echo "... rosbuild_premsgsrvgen"
@@ -342,9 +357,12 @@ help:
 	@echo "... test-results"
 	@echo "... test-results-run"
 	@echo "... tests"
-	@echo "... src/imagePublisher.o"
-	@echo "... src/imagePublisher.i"
-	@echo "... src/imagePublisher.s"
+	@echo "... src/pointcloudPublisher.o"
+	@echo "... src/pointcloudPublisher.i"
+	@echo "... src/pointcloudPublisher.s"
+	@echo "... src/pointcloud_utils.o"
+	@echo "... src/pointcloud_utils.i"
+	@echo "... src/pointcloud_utils.s"
 .PHONY : help
 
 

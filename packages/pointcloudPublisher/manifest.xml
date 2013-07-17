@@ -1,0 +1,18 @@
+<package>
+  <description brief="pointcloudPublisher">
+
+     pointcloudPublisher
+
+  </description>
+  <author>mmunaro</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/pointcloudPublisher</url>
+  <depend package="roscpp"/>
+  <depend package="image_transport"/>
+  <depend package="cv_bridge"/>
+  <depend package="pcl"/>
+  <depend package="pcl_ros"/>
+</package>
+
+

@@ -5,4 +5,14 @@ cx: 319.5
 cy: 239.5
 baseline: 0.075
 fixed_focal_length: 525.0
+disparity_focal_length: 570.342
+disparity_cx: 314.5
+disparity_cy: 235.5
+disp2rgb_x: 0.025
+disp2rgb_y: 0.0
+disp2rgb_z: 0.0
+disp2rgb_roll: 0.0
+disp2rgb_pitch: 0.0
+disp2rgb_yaw: 0.0
+
 

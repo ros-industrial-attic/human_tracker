@@ -1,21 +1,21 @@
 /*
 Software License Agreement (BSD License)
- 
+
 Copyright (c) 2013, Southwest Research Institute
 All rights reserved.
- 
+
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
- 
-   * Redistributions of source code must retain the above copyright
+
+ * Redistributions of source code must retain the above copyright
      notice, this list of conditions and the following disclaimer.
-   * Redistributions in binary form must reproduce the above copyright
+ * Redistributions in binary form must reproduce the above copyright
      notice, this list of conditions and the following disclaimer in the
      documentation and/or other materials provided with the distribution.
-   * Neither the name of the Southwest Research Institute, nor the names
+ * Neither the name of the Southwest Research Institute, nor the names
      of its contributors may be used to endorse or promote products derived
      from this software without specific prior written permission.
- 
+
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -27,7 +27,7 @@ INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
 CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
 /*****************************************************************************
  ** Includes
@@ -53,7 +53,7 @@ namespace Cten {
    *****************************************************************************/
 
   Consistency::Consistency(){
-	
+
     minAspect = 0.30;
     maxAspect = 1.30;
     stepAspect = 0.85;
@@ -66,7 +66,7 @@ namespace Cten {
     maxY=400;
     stepX=0.33;			
     stepY=0.33;
-	
+
     yhLowerM=0.0;
     yhLowerB=180.0;
     yhUpperM=-0.33;
@@ -76,11 +76,11 @@ namespace Cten {
     dhLowerB=-2.0;
     dhUpperM=0.28;
     dhUpperB=2.0;
-	
+
     minHeight = 64;
     maxHeight = 281;
     stepHeight = 0.9;
-    
+
     TD_.clear();
   }
 
@@ -130,7 +130,7 @@ namespace Cten {
   void Consistency::save(){
 
     FileStorage fs(ymlFilename.c_str(),FileStorage::WRITE);
-	
+
     fs<<"minAspect"<<minAspect;
     fs<<"maxAspect"<<maxAspect;
     fs<<"stepAspect"<<stepAspect;
@@ -168,32 +168,32 @@ namespace Cten {
       cvRoisOutput.push_back(cvRoisInput[i]);
       labelsOutput.push_back(labelsInput[i]);
       if(labelsInput[i] == 1){		// only retain positive examples
-	int centerx = cvRoisInput[i].x + cvRoisInput[i].width/2;
-	int centery = cvRoisInput[i].y + cvRoisInput[i].height/2;
-	if(cvRoisInput[i].x<0 ||cvRoisInput[i].y<0){
-	  ROS_ERROR("Invalid ROI, negative x or y");
-	}
-	else if(cvRoisInput[i].width + cvRoisInput[i].x > disparity_image.cols){
-	  ROS_ERROR("Invalid ROI, width");
-	}
-	else if(cvRoisInput[i].height<=0 || cvRoisInput[i].width<=0){
-	  ROS_ERROR("Invalid ROI, negative height or width");
-	}
-	else if(centerx > disparity_image.cols || centery > disparity_image.rows){
-	  ROS_ERROR("Invalid ROI, center %d %d",centerx,centery);
-	}
-	else{
-	  training_info tf;
-	  tf.x            = cvRoisInput[i].x;
-	  tf.y            = cvRoisInput[i].y;
-	  tf.height       = cvRoisInput[i].height;
-	  tf.width        = cvRoisInput[i].width;
-	  tf.aspect_ratio = ((float)tf.width)/((float)tf.height);
-	  //	  tf.disparity_c  = (int)disparity_image.at<float>(centery,centerx);
-	  tf.disparity_c  = (int)find_central_disparity(tf.x,tf.y,tf.height,tf.width);
-	  tf.disparity_a  = find_average_disparity(tf.x,tf.y,tf.height,tf.width);
-	  if(tf.disparity_c >= minDisparity) TD_.push_back(tf);
-	}
+        int centerx = cvRoisInput[i].x + cvRoisInput[i].width/2;
+        int centery = cvRoisInput[i].y + cvRoisInput[i].height/2;
+        if(cvRoisInput[i].x<0 ||cvRoisInput[i].y<0){
+          ROS_ERROR("Invalid ROI, negative x or y");
+        }
+        else if(cvRoisInput[i].width + cvRoisInput[i].x > disparity_image.cols){
+          ROS_ERROR("Invalid ROI, width");
+        }
+        else if(cvRoisInput[i].height<=0 || cvRoisInput[i].width<=0){
+          ROS_ERROR("Invalid ROI, negative height or width");
+        }
+        else if(centerx > disparity_image.cols || centery > disparity_image.rows){
+          ROS_ERROR("Invalid ROI, center %d %d",centerx,centery);
+        }
+        else{
+          training_info tf;
+          tf.x            = cvRoisInput[i].x;
+          tf.y            = cvRoisInput[i].y;
+          tf.height       = cvRoisInput[i].height;
+          tf.width        = cvRoisInput[i].width;
+          tf.aspect_ratio = ((float)tf.width)/((float)tf.height);
+          //	  tf.disparity_c  = (int)disparity_image.at<float>(centery,centerx);
+          tf.disparity_c  = (int)find_central_disparity(tf.x,tf.y,tf.height,tf.width);
+          tf.disparity_a  = find_average_disparity(tf.x,tf.y,tf.height,tf.width);
+          if(tf.disparity_c >= minDisparity) TD_.push_back(tf);
+        }
       }
     }
   }
@@ -207,8 +207,8 @@ namespace Cten {
 
     for(int i=0;i<height;i++){// y is rows
       for(int j=0;j<width;j++){// x is cols
-	sum +=(int)disparity_image.at<float>(y+i,x+j);
-	count++;
+        sum +=(int)disparity_image.at<float>(y+i,x+j);
+        count++;
       }
     }
     float ad = (float) sum/ (float)count;
@@ -224,7 +224,7 @@ namespace Cten {
     int j=width/2.0;// use central value for x
     for(int i=0;i<height/3;i++){// use middle third of y range
       if(disparity_image.at<float>(y+i,x+j)>ad){
-	ad = disparity_image.at<float>(y+i,x+j);
+        ad = disparity_image.at<float>(y+i,x+j);
       }
     }
 
@@ -241,7 +241,7 @@ namespace Cten {
     // minX,maxX,minY,maxY,minAspect,maxAspect,minH,maxH
     // dhLowerM,dhUpperM,dhLowerB,dhUpperB
     // yhLowerM,yhUpperM,yhLowerB,yhUpperB
-    
+
     minX = TD_[0].x;
     maxX = TD_[0].x;
     minY = TD_[0].y;
@@ -262,7 +262,7 @@ namespace Cten {
     float aspect_sigma = sqrt(sq_sum/all_aspects.size()-aspect_mean*aspect_mean);
     minAspect = aspect_mean - 2*aspect_sigma;
     maxAspect = aspect_mean + 2*aspect_sigma;
-    
+
     // model center disparity vs height
     cv::Mat samples(2,TD_.size(),CV_32FC1);
     for(unsigned int i=0;i<TD_.size();i++){
@@ -297,9 +297,9 @@ namespace Cten {
     }
   }
   void  Consistency::h_model2Matlab(string filename, string yaxis, cv::Mat &samples, float &num_std_dev,
-				    float &m1, float &b1,
-				    float &m2, float &b2,
-				    float &min_x, float &max_x)
+      float &m1, float &b1,
+      float &m2, float &b2,
+      float &min_x, float &max_x)
   {
     FILE *fp;
     fp = fopen(filename.c_str(),"w");
@@ -332,9 +332,9 @@ namespace Cten {
 
 
   void  Consistency::heteroscedastic_regression(cv::Mat &samples, float &num_std_dev,
-						float &m1, float &b1,
-						float &m2, float &b2,
-						float &min_x, float &max_x)
+      float &m1, float &b1,
+      float &m2, float &b2,
+      float &min_x, float &max_x)
   {
     cv::Mat A;
     cv::Mat B;
@@ -346,22 +346,22 @@ namespace Cten {
       A.create(samples.cols,2,CV_32FC1);
       B.create(samples.cols,1,CV_32FC1);
       for(int i=0;i<samples.cols;i++){
-	A.at<float>(i,0) = 1;
-	A.at<float>(i,1) = samples.at<float>(0,i);
-	B.at<float>(i,0) = samples.at<float>(1,i);
-	if(max_x<samples.at<float>(0,i)) max_x = samples.at<float>(0,i);
-	if(min_x>samples.at<float>(0,i)) min_x = samples.at<float>(0,i);
+        A.at<float>(i,0) = 1;
+        A.at<float>(i,1) = samples.at<float>(0,i);
+        B.at<float>(i,0) = samples.at<float>(1,i);
+        if(max_x<samples.at<float>(0,i)) max_x = samples.at<float>(0,i);
+        if(min_x>samples.at<float>(0,i)) min_x = samples.at<float>(0,i);
       }
     }
     else if(samples.cols==2){ // each row is a sample
       A.create(samples.rows,2,CV_32FC1);
       B.create(samples.rows,1,CV_32FC1);
       for(int i=0;i<samples.cols;i++){
-	A.at<float>(i,0) = 1;
-	A.at<float>(i,1) = samples.at<float>(i,0);
-	B.at<float>(i,0) = samples.at<float>(i,1);
-	if(max_x<samples.at<float>(i,0)) max_x = samples.at<float>(i,0);
-	if(min_x>samples.at<float>(i,0)) min_x = samples.at<float>(i,0);
+        A.at<float>(i,0) = 1;
+        A.at<float>(i,1) = samples.at<float>(i,0);
+        B.at<float>(i,0) = samples.at<float>(i,1);
+        if(max_x<samples.at<float>(i,0)) max_x = samples.at<float>(i,0);
+        if(min_x>samples.at<float>(i,0)) min_x = samples.at<float>(i,0);
       }
     }
     else{
@@ -377,10 +377,10 @@ namespace Cten {
     // that's a whole lot of repeated words, I hope they make sense
     if(is_ok){
       for(int i=0;i<B.rows;i++){
-	// compute error of each term
-	e = X.at<float>(0,0)+X.at<float>(1,0)*A.at<float>(i,1) - B.at<float>(i,0);
-	// A stays the same
-	B.at<float>(i,0) = fabs(e);
+        // compute error of each term
+        e = X.at<float>(0,0)+X.at<float>(1,0)*A.at<float>(i,1) - B.at<float>(i,0);
+        // A stays the same
+        B.at<float>(i,0) = fabs(e);
       }
       is_ok = cv::solve(A,B,R,cv::DECOMP_SVD);
     }
@@ -421,37 +421,37 @@ namespace Cten {
     }
     q++;
     if(q>=4) q=0;
-     
+
     for(float ar=maxAspect;ar>=minAspect;ar*=stepAspect){ // iterate over range of aspect ratios
       for(int h=maxHeight;h>=minHeight;h*=stepHeight){ // iterate over range of heights
-	int uly = (int)( yhUpperB+yhUpperM*h);// find upper bounds on y
-	int lly = (int)( yhLowerB+yhLowerM*h);// find lower bounds on y
-	if(lly<0) lly=0;
-	if(uly>=disparity_image.rows-h) uly=disparity_image.rows-h;
-	float ul = dhUpperB + dhUpperM*h;
-	float ll = dhLowerB + dhLowerM*h;
-	int w = (int)(h*ar);
-	for(int y=lly+y_offset*h*stepY;y<=uly;y+=2*stepY*h){ // iterate over shortend range in y
-	  for(int x=minX+x_offset*w*stepX;x<=maxX;x+=2*stepX*w){ // iterate over range of x values
-	    // window is at x,y with h and aspect ratio 
-	    if(x+w<disparity_image.cols &&  y+h<disparity_image.rows){
-	      //	      int centerx = x + w/2;
-	      //	      int centery = y + h/2;
-	      //	      float cd = disparity_image.at<float>(centery,centerx);
-	      float cd = find_central_disparity(x,y,h,w);
-	      if(cd <= ul && cd >= ll && cd >= minDisparity){
-		// create a roi and add to list
-		CvRect cvRoi;
-		cvRoi.x = (int)x;
-		cvRoi.y = y;
-		cvRoi.height = h;
-		cvRoi.width = w;
-		cvRoisOutput.push_back(cvRoi);
-		labelsOutput.push_back(label);
-	      }
-	    }// end if reasonable x,y,h,w
-	  }// end iterations over y
-	}// end eterations over x
+        int uly = (int)( yhUpperB+yhUpperM*h);// find upper bounds on y
+        int lly = (int)( yhLowerB+yhLowerM*h);// find lower bounds on y
+        if(lly<0) lly=0;
+        if(uly>=disparity_image.rows-h) uly=disparity_image.rows-h;
+        float ul = dhUpperB + dhUpperM*h;
+        float ll = dhLowerB + dhLowerM*h;
+        int w = (int)(h*ar);
+        for(int y=lly+y_offset*h*stepY;y<=uly;y+=2*stepY*h){ // iterate over shortend range in y
+          for(int x=minX+x_offset*w*stepX;x<=maxX;x+=2*stepX*w){ // iterate over range of x values
+            // window is at x,y with h and aspect ratio
+            if(x+w<disparity_image.cols &&  y+h<disparity_image.rows){
+              //	      int centerx = x + w/2;
+              //	      int centery = y + h/2;
+              //	      float cd = disparity_image.at<float>(centery,centerx);
+              float cd = find_central_disparity(x,y,h,w);
+              if(cd <= ul && cd >= ll && cd >= minDisparity){
+                // create a roi and add to list
+                CvRect cvRoi;
+                cvRoi.x = (int)x;
+                cvRoi.y = y;
+                cvRoi.height = h;
+                cvRoi.width = w;
+                cvRoisOutput.push_back(cvRoi);
+                labelsOutput.push_back(label);
+              }
+            }// end if reasonable x,y,h,w
+          }// end iterations over y
+        }// end eterations over x
       }// end iterations over height
     }// end iterations over aspect ratio
 
