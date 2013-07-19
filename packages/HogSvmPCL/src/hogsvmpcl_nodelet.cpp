@@ -38,6 +38,8 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "roi_msgs/Rois.h"
 #include "std_msgs/String.h"
 
+#include <roi_msgs/overlap.hpp>
+
 //Time Synchronizer
 // NOTE: Time Synchronizer conflicts with QT includes may need to investigate
 #include <message_filters/subscriber.h>
@@ -100,6 +102,9 @@ namespace HogSvmPCL
     ros::Publisher pub_Disparity_Image_;
 
     Rois output_rois_;
+    Rois non_overlapping_rois_;
+    bool remove_overlapping_rois_;
+    double max_overlap_;
 
     //Define the Classifier Object
     HogSvmPCL::HogSvmPCLClassifier HSC_;
@@ -114,6 +119,18 @@ namespace HogSvmPCL
       if(!private_node_.getParam("Q_Size",qs))
       {
         qs=3;
+      }
+
+      // flag for removing overlapping rois
+      if(!private_node_.getParam("RemoveOverlappingRois",remove_overlapping_rois_)){
+    	ROS_ERROR("couldn't find RemoveOverlappingRois parameter");
+    	remove_overlapping_rois_ = false;
+      }
+
+      // max overlap allowed for rois
+      if(!private_node_.getParam("MaxOverlap",max_overlap_)){
+    	  ROS_ERROR("couldn't find MaxOverlap parameter");
+    	  max_overlap_ = 0.8;
       }
 
       std::string classifier_filename; // classifier file name
@@ -241,7 +258,20 @@ namespace HogSvmPCL
         R.label  = L_out[i];
         output_rois_.rois.push_back(R);
       }
-      pub_rois_.publish(output_rois_);
+
+      if (remove_overlapping_rois_)
+      {
+    	non_overlapping_rois_.rois.clear();
+    	non_overlapping_rois_.header.stamp = image_msg->header.stamp;
+    	non_overlapping_rois_.header.frame_id = image_msg->header.frame_id;
+    	remove_overlap_Rois(output_rois_, max_overlap_, non_overlapping_rois_);
+    	pub_rois_.publish(non_overlapping_rois_);
+      }
+      else
+      {
+    	pub_rois_.publish(output_rois_);
+      }
+
       pub_Color_Image_.publish(image_msg);
       pub_Disparity_Image_.publish(disparity_msg);
 

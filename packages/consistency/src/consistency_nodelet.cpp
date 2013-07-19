@@ -102,6 +102,7 @@ namespace consistency
       Rois output_rois_;
       Rois non_overlapping_rois_;
       bool remove_overlapping_rois_;
+      double max_overlap_;
 
       //Define the Classifier Object
       Cten::Consistency con_;
@@ -194,6 +195,12 @@ namespace consistency
         if(!private_node_.getParam("RemoveOverlappingRois",remove_overlapping_rois_)){
           ROS_ERROR("couldn't find RemoveOverlappingRois parameter");
           remove_overlapping_rois_ = false;
+        }
+
+        // max overlap allowed for rois
+        if(!private_node_.getParam("MaxOverlap",max_overlap_)){
+          ROS_ERROR("couldn't find MaxOverlap parameter");
+          max_overlap_ = 0.8;
         }
 
         if(con_.mode.compare("detect") == 0){
@@ -367,7 +374,7 @@ namespace consistency
           non_overlapping_rois_.rois.clear();
           non_overlapping_rois_.header.stamp = image_msg->header.stamp;
           non_overlapping_rois_.header.frame_id = image_msg->header.frame_id;
-          remove_overlap_Rois(output_rois_, non_overlapping_rois_);
+          remove_overlap_Rois(output_rois_, max_overlap_, non_overlapping_rois_);
         }
         /*
 	non_overlapping_rois_.header.stamp    = image_msg->header.stamp;

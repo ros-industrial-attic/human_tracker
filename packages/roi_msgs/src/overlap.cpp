@@ -52,7 +52,7 @@ float calcOverlapMax(RoiRect r1, RoiRect r2)
     return 0.0;
 }  // calcOverlapMax
 
-void remove_overlap_Rois(Rois& rois_msg_input, Rois& rois_msg_output)
+void remove_overlap_Rois(Rois& rois_msg_input, double max_overlap, Rois& rois_msg_output)
 {
   float o;
   int n = (int) rois_msg_input.rois.size();
@@ -61,7 +61,7 @@ void remove_overlap_Rois(Rois& rois_msg_input, Rois& rois_msg_output)
   for(int i = 1;i<n;i++){
     bool overlap = false;
     for(unsigned int j = 0;j<rois_msg_output.rois.size();j++){ // check against those on list
-      if ((o=calcOverlapMax(rois_msg_input.rois[i],rois_msg_output.rois[j])) > .80){
+      if ((o=calcOverlapMax(rois_msg_input.rois[i],rois_msg_output.rois[j])) > max_overlap){
 	//	ROS_ERROR("overlap %d %d = %lf",i,j,o);
 	overlap = true;
 	break;
