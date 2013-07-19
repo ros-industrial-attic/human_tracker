@@ -1,0 +1,28 @@
+<package>
+  <description brief="HogSvmPCL">
+
+     HogSvmPCL
+
+  </description>
+  <author>Matteo Munaro</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/HogSvmPCL</url>
+  <depend package="roscpp"/>
+  <depend package="rospy"/>
+  <depend package="image_transport"/>
+  <depend package="cv_bridge"/>
+  <depend package="dynamic_reconfigure"/>
+  <depend package="opencv2"/>
+  <depend package="roi_msgs"/>
+  <depend package="nodelet"/>
+
+  <export>
+    <rosbuild cmake_directory="${prefix}/cmake"/>
+    <cpp cflags="-I${prefix}/include" lflags="-L${prefix}/lib -lHogSvmPCL"/>    
+    <nodelet plugin="${prefix}/nodelet_plugins.xml" />
+  </export>
+
+</package>
+
+

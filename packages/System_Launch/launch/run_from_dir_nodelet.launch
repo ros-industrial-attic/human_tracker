@@ -5,7 +5,7 @@
   <!--arg name="classifierDir" default="Stereo"/-->
   <arg name="cameraInfoFilename" default="$(env NIST_CLASSIFIERS)/$(arg classifierDir)/cameraInfo.yml"/>
   <arg name="directory" default="$(env NIST_IMAGES)"/>
-  <arg name="replayRate" default="10."/>
+  <arg name="replayRate" default="30."/>
   
   <!-- Play files from folder -->
   <node name="ImagePublisher" pkg="imagePublisher" type="imagePublisher">
@@ -79,8 +79,7 @@
           num_Training_Samples: 350
           HaarSvmThreshold: -0.5
        </rosparam>
-    </node> bisogna dire che solo alcune vengono visualizzate 
-
+    </node>
 
    <!-- Launch HogSvm Nodelet -->
    <node  pkg="nodelet" type="nodelet" name="HogSvm" args="load HogSvm/hogsvm_nodelet MNode" output="screen">	
@@ -98,12 +97,12 @@
    </node> 
 
    <!-- display the rois -->
-   <!--node pkg="roiViewer" type="roiViewer" name="HaarAdaViewer" >
+   <node pkg="roiViewer" type="roiViewer" name="HaarAdaViewer" >
         <param name="mode" type="string" value="roi_display"/> 
         <param name="label" type="int" value="1" />
 	<remap from ="input_image" to="HogSvmColorImage"/>
 	<remap from ="input_rois" to="HogSvmOutputRois"/>  
-   </node-->
+   </node>
    
      <!-- Launch Tracking Node-->
   <node name="TrackNode" pkg="object_tracking" type="object_tracking_node" output="screen">	
@@ -115,7 +114,6 @@
        <remap from="r_camera_info" to="camera/projector/camera_info"/>
        <param name="Filter_Dir" value="$(find object_tracking)/perception_data" />
        <param name="Calculate_Covariance" value="true" />
-       <!--param name="CSV_Filename" value="none" /-->
        <param name="CSV_Filename" value="/home/matteo/test1.csv" />
        <param name="Show_Images" value="true" />
        <param name="Write_image_results" value="true" />
