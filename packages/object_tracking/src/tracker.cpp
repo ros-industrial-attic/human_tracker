@@ -108,7 +108,8 @@ void ParticleTrack::revive(cv::Mat& input, cv::Mat& disp, CvRect inROI)
     ROS_ERROR("inROI size too small %d %d",inROI.height,inROI.width);
   }
 
-  ROS_INFO("Reviving tracker %d", (int) uid);
+  if (debug_mode_)
+    ROS_INFO("Reviving tracker %d", (int) uid);
   age = 0.0;
   position_history.clear();
   // Find x-z location by filtering map
@@ -143,7 +144,7 @@ int ParticleTrack::update_state(cv::Mat& input, cv::Mat& disp, double dt)
   maxVal = 2500.0;
   xz_map_ = xz_map_ * (1.0 / maxVal);
 
-  if(1)
+  if(debug_mode_)
   {
     cv::Mat xzDisplay;
     cv::resize(xz_map_, xzDisplay, cv::Size(400, 400), 0, 0, cv::INTER_AREA);
@@ -157,11 +158,13 @@ int ParticleTrack::update_state(cv::Mat& input, cv::Mat& disp, double dt)
   }
 
   // update filter state (will use passed through Mat objects in likelihood fcn)
-  ROS_INFO("Updating object %d, dt = %f", uid, dt);
+  if (debug_mode_)
+    ROS_INFO("Updating object %d, dt = %f", uid, dt);
   updateState(input, dt);
   if (is_dead_)
   {
-    ROS_INFO("Tracker %d died.", uid);
+    if (debug_mode_)
+      ROS_INFO("Tracker %d died.", uid);
     return is_dead_;
   }
 

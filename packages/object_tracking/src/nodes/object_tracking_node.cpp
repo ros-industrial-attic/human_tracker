@@ -137,6 +137,7 @@ private:
   bool show_images_;
   int max_objects_;
   bool write_image_results_;
+  bool debug_mode_;
 
 public:
 
@@ -183,6 +184,10 @@ public:
 
     if(!node_.getParam(nn + "/Write_image_results", write_image_results_)){
     	write_image_results_ = false; // don't publish by default
+    }
+
+    if(!node_.getParam(nn + "/Debug_mode", debug_mode_)){
+      debug_mode_ = true; // debug_mode active by default
     }
 
     if(csv_filename_ != "none")
@@ -254,7 +259,13 @@ public:
     if(show_images_)
     {
       cv::namedWindow("Trackers", 0 ); // non-autosized
+    }
+    if(debug_mode_)
+    {
       cv::namedWindow("Test",0);
+    }
+    if (show_images_ || debug_mode_)
+    {
       cv::startWindowThread();
     }
 
@@ -467,6 +478,7 @@ public:
 
         // Create a new tracker object
         boost::shared_ptr<ParticleTrack> temp(new ParticleTrack());
+        temp->debug_mode_ = debug_mode_;
         temp->initialize(image, disp, detections_[i], filter_dir_, Q_, angle_);
         if(temp->size_>1)
         {

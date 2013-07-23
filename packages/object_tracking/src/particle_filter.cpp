@@ -39,6 +39,7 @@ POSSIBILITY OF SUCH DAMAGE.
       N = 500;
       neff = N;
       is_dead_ = false;
+      console_output_ = false;
     }
 
     void ParticleFilter::initialize(Particle initial_state)
@@ -179,7 +180,8 @@ POSSIBILITY OF SUCH DAMAGE.
       for(int i = 0; i < N; i++) sum += pow(particle_model[i].weight, 2);
       neff = 1.0/sum;
       if(sum == 0) neff = 0.0;
-       ROS_INFO("Neff = %f", neff);
+      if (console_output_)
+        ROS_INFO("Neff = %f", neff);
 
       if(neff < N * 0.04)
       {

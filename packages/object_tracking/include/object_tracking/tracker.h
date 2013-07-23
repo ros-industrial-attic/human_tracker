@@ -104,6 +104,8 @@ using namespace std;
     cv::Mat hist_;
     uint64_t uid;
 
+    bool debug_mode_;  // if true, console output and visualization is active
+
     /**
      * @brief Construct a tracking object
      */

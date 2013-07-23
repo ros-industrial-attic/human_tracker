@@ -67,6 +67,8 @@ using namespace std;
     bool is_dead_;
     Particle current_map_;
     vector<Particle> particle_model; //length N
+    bool console_output_;
+
     /**
      * @brief Construct a filter object
      */

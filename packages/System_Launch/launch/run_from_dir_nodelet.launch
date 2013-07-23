@@ -5,7 +5,7 @@
   <!--arg name="classifierDir" default="Stereo"/-->
   <arg name="cameraInfoFilename" default="$(env NIST_CLASSIFIERS)/$(arg classifierDir)/cameraInfo.yml"/>
   <arg name="directory" default="$(env NIST_IMAGES)"/>
-  <arg name="replayRate" default="30."/>
+  <arg name="replayRate" default="10."/>
   
   <!-- Play files from folder -->
   <node name="ImagePublisher" pkg="imagePublisher" type="imagePublisher">
@@ -84,7 +84,7 @@
    <!-- Launch HogSvm Nodelet -->
    <node  pkg="nodelet" type="nodelet" name="HogSvm" args="load HogSvm/hogsvm_nodelet MNode" output="screen">	
        <param name="Q_Size" value="2" />
-       <remap from="Color_Image" to="HaarSvmColorImage"/>	calculate
+       <remap from="Color_Image" to="HaarSvmColorImage"/>	
        <remap from="Disparity_Image" to="HaarSvmDisparityImage"/>
        <remap from="input_rois" to="HaarSvmOutputRois"/>
        <param name="mode" value="load"/>
@@ -97,15 +97,15 @@
    </node> 
 
    <!-- display the rois -->
-   <node pkg="roiViewer" type="roiViewer" name="HaarAdaViewer" >
+   <node pkg="roiViewer" type="roiViewer" name="HogSvmViewer" >
         <param name="mode" type="string" value="roi_display"/> 
         <param name="label" type="int" value="1" />
 	<remap from ="input_image" to="HogSvmColorImage"/>
 	<remap from ="input_rois" to="HogSvmOutputRois"/>  
    </node>
    
-     <!-- Launch Tracking Node-->
-  <node name="TrackNode" pkg="object_tracking" type="object_tracking_node" output="screen">	
+   <!-- Launch Tracking Node-->
+   <node name="TrackNode" pkg="object_tracking" type="object_tracking_node" output="screen">	
        <param name="Q_Size" value="2" />
        <remap from="Color_Image" to="HogSvmColorImage"/>	
        <remap from="Disparity_Image" to="HogSvmDisparityImage"/>
@@ -117,6 +117,7 @@
        <param name="CSV_Filename" value="/home/matteo/test1.csv" />
        <param name="Show_Images" value="true" />
        <param name="Write_image_results" value="true" />
-  </node> 
+       <param name="Debug_mode" value="false" />
+   </node> 
 
 </launch>
