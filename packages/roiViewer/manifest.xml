@@ -8,7 +8,7 @@
   <license>BSD</license>
   <review status="unreviewed" notes=""/>
   <url>http://ros.org/wiki/roiViewer</url>
-  <depend package="qt_build"/>
+  <!--depend package="qt_build"/-->
   <depend package="roscpp"/>
   <depend package="roi_msgs"/>
   <depend package="image_transport"/>
