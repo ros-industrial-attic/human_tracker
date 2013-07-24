@@ -134,9 +134,9 @@ namespace HogSvmPCL {
       unsigned char* ptr = (unsigned char*) (sample.datastart + row * sample.step);
       for(int col = 0; col < sample.cols; col++)
       {
-        sample_float[row + sample.rows * col] = (float) ptr[col * 3 + 2];
-        sample_float[row + sample.rows * col + delta] = (float) ptr[col * 3 + 1];
-        sample_float[row + sample.rows * col + delta * 2] = (float) ptr[col * 3];
+        sample_float[row + sample.rows * col] = ((float) ptr[col * 3 + 2])/255;
+		sample_float[row + sample.rows * col + delta] = ((float) ptr[col * 3 + 1])/255;
+		sample_float[row + sample.rows * col + delta * 2] = ((float) ptr[col * 3])/255;
       }
     }
 
