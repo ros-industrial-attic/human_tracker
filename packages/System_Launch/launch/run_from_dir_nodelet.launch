@@ -5,7 +5,7 @@
   <!--arg name="classifierDir" default="Stereo"/-->
   <arg name="cameraInfoFilename" default="$(env NIST_CLASSIFIERS)/$(arg classifierDir)/cameraInfo.yml"/>
   <arg name="directory" default="$(env NIST_IMAGES)"/>
-  <arg name="replayRate" default="10."/>
+  <arg name="replayRate" default="30."/>
   
   <!-- Play files from folder -->
   <node name="ImagePublisher" pkg="imagePublisher" type="imagePublisher">
@@ -95,7 +95,7 @@
        <param name="HogSvmThreshold" value="0.0"/>
        <param name="Save_Average_Roi" value="false"/>
    </node> 
-
+   
    <!-- display the rois -->
    <node pkg="roiViewer" type="roiViewer" name="HogSvmViewer" >
         <param name="mode" type="string" value="roi_display"/> 
@@ -114,7 +114,7 @@
        <remap from="r_camera_info" to="camera/projector/camera_info"/>
        <param name="Filter_Dir" value="$(find object_tracking)/perception_data" />
        <param name="Calculate_Covariance" value="true" />
-       <param name="CSV_Filename" value="/home/matteo/test1.csv" />
+       <param name="CSV_Filename" value="/home/matteo/test1_CROR.csv" />
        <param name="Show_Images" value="true" />
        <param name="Write_image_results" value="true" />
        <param name="Debug_mode" value="false" />

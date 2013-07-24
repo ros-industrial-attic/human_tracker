@@ -37,17 +37,27 @@
    <!-- Launch HogSvmPCL Nodelet -->
    <node  pkg="nodelet" type="nodelet" name="HogSvmPCL" args="load HogSvmPCL/hogsvmpcl_nodelet MNode" output="screen">	
        <param name="Q_Size" value="2" />
-       <remap from="Color_Image" to="ConsistencyColorImage"/>	calculate
+       <remap from="Color_Image" to="ConsistencyColorImage"/>	
        <remap from="Disparity_Image" to="ConsistencyDisparityImage"/>
        <remap from="input_rois" to="ConsistencyOutputRois"/>
-       <param name="classifier_file" value="$(env NIST_CLASSIFIERS)/$(arg classifierDir)/HogSvmPCL.yaml"/>
-       <param name="HogSvmThreshold" value="-1.5"/>
+       <!--param name="classifier_file" value="$(env NIST_CLASSIFIERS)/$(arg classifierDir)/HogSvmPCL.yaml"/-->
+       <param name="classifier_file" value="$(env NIST_CLASSIFIERS)/$(arg classifierDir)/HogSvmPCL_half.yaml"/>
+       <param name="Mode" value="1"/>
+       <param name="HogSvmThreshold" value="-0.975"/>
        <param name="RemoveOverlappingRois" value="true"/>
-       <param name="MaxOverlap" value="0.6"/>
+       <param name="MaxOverlap" value="0.3"/>
    </node> 
 
    <!-- display the rois -->
-   <node pkg="roiViewer" type="roiViewer" name="HaarAdaViewer" >
+   <!--node pkg="roiViewer" type="roiViewer" name="ConsistencyViewer" >
+        <param name="mode" type="string" value="roi_display"/> 
+        <param name="label" type="int" value="1" />
+	<remap from ="input_image" to="ConsistencyColorImage"/>
+	<remap from ="input_rois" to="ConsistencyOutputRois"/>  
+   </node-->
+   
+   <!-- display the rois -->
+   <node pkg="roiViewer" type="roiViewer" name="HogSvmViewer" >
         <param name="mode" type="string" value="roi_display"/> 
         <param name="label" type="int" value="1" />
 	<remap from ="input_image" to="HogSvmColorImage"/>
@@ -64,9 +74,10 @@
        <remap from="r_camera_info" to="camera/projector/camera_info"/>
        <param name="Filter_Dir" value="$(find object_tracking)/perception_data" />
        <param name="Calculate_Covariance" value="true" />
-       <param name="CSV_Filename" value="/home/matteo/test1.csv" />
+       <param name="CSV_Filename" value="/home/matteo/nodelets_10fps_HogSvmPCL_Hog-0975_Ov03_Half.csv" />
        <param name="Show_Images" value="true" />
        <param name="Write_image_results" value="true" />
+       <param name="Debug_mode" value="false" />
   </node> 
 
 </launch>

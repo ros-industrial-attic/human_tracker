@@ -143,7 +143,7 @@ namespace HogSvmPCL {
     // Calculate HOG descriptor:
     pcl::people::HOG hog;
     float *descriptor = (float*) calloc(SVM_weights_.size(), sizeof(float));
-    hog.compute(sample_float, descriptor);
+    hog.compute(sample_float, window_height_, window_width_, 3, 8, 9, true, descriptor);
 
     // Calculate confidence value by dot product:
     float confidence = 0.0;

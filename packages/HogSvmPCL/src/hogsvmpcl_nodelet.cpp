@@ -105,6 +105,7 @@ namespace HogSvmPCL
     Rois non_overlapping_rois_;
     bool remove_overlapping_rois_;
     double max_overlap_;
+    int mode_;
 
     //Define the Classifier Object
     HogSvmPCL::HogSvmPCLClassifier HSC_;
@@ -131,6 +132,12 @@ namespace HogSvmPCL
       if(!private_node_.getParam("MaxOverlap",max_overlap_)){
     	  ROS_ERROR("couldn't find MaxOverlap parameter");
     	  max_overlap_ = 0.8;
+      }
+
+      // Select between whole body (mode = 0) or half-body (mode = 1) classification
+      if(!private_node_.getParam("Mode", mode_))
+      {
+    	  mode_ = 0;
       }
 
       std::string classifier_filename; // classifier file name
@@ -163,7 +170,7 @@ namespace HogSvmPCL
           _3));
     }
 
-    void classifyROIs (vector<Rect>& R_in, vector<int>& L_in, Mat image, double min_confidence, vector<Rect>& R_out, vector<int>& L_out)
+    void classifyROIs (vector<Rect>& R_in, vector<int>& L_in, Mat image, double min_confidence, int mode, vector<Rect>& R_out, vector<int>& L_out)
     {
       R_out.clear();
       L_out.clear();
@@ -174,7 +181,15 @@ namespace HogSvmPCL
         int xmin = int (R_in[i].x + static_cast<float>(R_in[i].width/2) - (static_cast<float>(R_in[i].height)/2));
         int ymin = R_in[i].y;
         int width = R_in[i].height;
-        int height = R_in[i].height * 2;
+        int height;
+        if (mode_ == 0)
+        {
+          height = R_in[i].height * 2;
+        }
+        else if (mode_ == 1)
+        {
+          height = R_in[i].height;
+        }
 
         if (height > 0)
         {
@@ -242,7 +257,7 @@ namespace HogSvmPCL
       }
 
       // Classify all input ROIs and save "people" ROIs into R_out and L_out:
-      classifyROIs (R_in, L_in, image, min_confidence, R_out, L_out);
+      classifyROIs (R_in, L_in, image, min_confidence, mode_, R_out, L_out);
 
       output_rois_.rois.clear();
       output_rois_.header.stamp = image_msg->header.stamp;
