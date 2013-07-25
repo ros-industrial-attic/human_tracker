@@ -212,7 +212,7 @@ class imagePublisherNode
 		ros::Rate loop_rate(replayRate_);
 
 		//For each image.jpg file
-		for(unsigned int i=0; i<files.size();i++)
+		for(unsigned int i=3500; i<files.size();i++)
 		{
 			// Example tru filename 1352474617911069665_image.tru
 			// Example img filename 1352474617911069665_image.jpg

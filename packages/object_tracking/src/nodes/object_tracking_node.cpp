@@ -179,7 +179,7 @@ public:
     }
 
     if(!node_.getParam(nn + "/Show_Images", show_images_)){
-      show_images_ = true; // don't calculate by default
+      show_images_ = true; // show tracker image by default
     }
 
     if(!node_.getParam(nn + "/Write_image_results", write_image_results_)){
@@ -721,7 +721,7 @@ public:
 
 int main(int argc, char **argv)
 {
-  ros::init(argc, argv, "HaarSvm");
+  ros::init(argc, argv, "ObjectTracking");
   ros::NodeHandle n;
   ObjectTrackingNode HN(n);
   ros::spin();

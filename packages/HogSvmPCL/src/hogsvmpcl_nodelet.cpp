@@ -170,10 +170,10 @@ namespace HogSvmPCL
           _3));
     }
 
-    void classifyROIs (vector<Rect>& R_in, vector<int>& L_in, Mat image, double min_confidence, int mode, vector<Rect>& R_out, vector<int>& L_out)
+    void classifyROIs (vector<Rect>& R_in, vector<double>& C_in, Mat image, double min_confidence, int mode, vector<Rect>& R_out, vector<double>& C_out)
     {
       R_out.clear();
-      L_out.clear();
+      C_out.clear();
 
       for(unsigned int i=0;i<R_in.size();i++)
       {
@@ -199,7 +199,7 @@ namespace HogSvmPCL
           if (confidence > min_confidence) // if person found
           { // write current roi in R_out
             R_out.push_back(R_in[i]);
-            L_out.push_back(1);
+            C_out.push_back(confidence);
           }
         }
       }
@@ -224,7 +224,7 @@ namespace HogSvmPCL
         const RoisConstPtr& rois_msg)
     {
       vector<Rect> R_out;
-      vector<int> L_out;
+      vector<double> C_out;
       string param_name;
 
       //Use CV Bridge to convert images
@@ -232,10 +232,10 @@ namespace HogSvmPCL
       Mat image  = cv_rgb->image;
 
       // take the region of interest message and create vectors of ROIs and labels
-      vector<int> L_in;   // vector of labels
+      vector<double> C_in;   // vector of labels
       vector<Rect> R_in;  // vector of ROIs
       R_in.clear();
-      L_in.clear();
+      C_in.clear();
       // Read ROIs message from topic:
       for(unsigned int i=0;i<rois_msg->rois.size();i++)
       {
@@ -243,11 +243,11 @@ namespace HogSvmPCL
         int y = rois_msg->rois[i].y;
         int w = rois_msg->rois[i].width;
         int h = rois_msg->rois[i].height;
-        int l = rois_msg->rois[i].label;
+        double c = rois_msg->rois[i].confidence;
 
         Rect R(x,y,w,h);
         R_in.push_back(R);
-        L_in.push_back(l);
+        C_in.push_back(c);
       }
       // get parameter for controlling point along ROC
       double min_confidence=0.0;
@@ -257,12 +257,12 @@ namespace HogSvmPCL
       }
 
       // Classify all input ROIs and save "people" ROIs into R_out and L_out:
-      classifyROIs (R_in, L_in, image, min_confidence, mode_, R_out, L_out);
+      classifyROIs (R_in, C_in, image, min_confidence, mode_, R_out, C_out);
 
       output_rois_.rois.clear();
       output_rois_.header.stamp = image_msg->header.stamp;
       output_rois_.header.frame_id = image_msg->header.frame_id;
-      ROS_INFO("HogSvm found %d objects",(int)L_out.size());
+      ROS_INFO("HogSvm found %d objects",(int)C_out.size());
       for(unsigned int i=0; i<R_out.size();i++)
       {
         RoiRect R;
@@ -270,7 +270,8 @@ namespace HogSvmPCL
         R.y      = R_out[i].y;
         R.width  = R_out[i].width;
         R.height = R_out[i].height;
-        R.label  = L_out[i];
+        R.label  = 1;
+        R.confidence  = C_out[i];
         output_rois_.rois.push_back(R);
       }
 
