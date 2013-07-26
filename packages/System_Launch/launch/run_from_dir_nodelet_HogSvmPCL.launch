@@ -43,9 +43,9 @@
        <!--remap from="Color_Image" to="HaarDispAdaColorImage"/>	
        <remap from="Disparity_Image" to="HaarDispAdaDisparityImage"/>
        <remap from="input_rois" to="HaarDispAdaOutputRois"/-->
-       <param name="classifier_file" value="$(env NIST_CLASSIFIERS)/$(arg classifierDir)/HogSvmPCL.yaml"/>
-       <!--param name="classifier_file" value="$(env NIST_CLASSIFIERS)/$(arg classifierDir)/HogSvmPCL_half.yaml"/-->
-       <param name="Mode" value="0"/>
+       <!--param name="classifier_file" value="$(env NIST_CLASSIFIERS)/$(arg classifierDir)/HogSvmPCL.yaml"/-->
+       <param name="classifier_file" value="$(env NIST_CLASSIFIERS)/$(arg classifierDir)/HogSvmPCL_half.yaml"/>
+       <param name="Mode" value="1"/>
        <param name="HogSvmThreshold" value="-0.975"/>
        <param name="RemoveOverlappingRois" value="true"/>
        <param name="MaxOverlap" value="0.3"/>
@@ -53,9 +53,6 @@
 
    <!-- Launch HaarDispAda Nodelet -->
    <node  pkg="nodelet" type="nodelet" name="HaarDispAda" args="load HaarDispAda/haardispada_nodelet MNode" output="screen">	
-       <!--remap from="Color_Image" to="ConsistencyColorImage"/>	
-       <remap from="Disparity_Image" to="ConsistencyDisparityImage"/>
-       <remap from="input_rois" to="ConsistencyOutputRois"/-->
        <remap from="Color_Image" to="HogSvmColorImage"/>	
        <remap from="Disparity_Image" to="HogSvmDisparityImage"/>
        <remap from="input_rois" to="HogSvmOutputRois"/>
@@ -88,24 +85,27 @@
    </node-->
   
    <!-- display the rois -->
-   <!--node pkg="roiViewer" type="roiViewer" name="HaarDispAdaViewer" >
+   <node pkg="roiViewer" type="roiViewer" name="HaarDispAdaViewer" >
         <param name="mode" type="string" value="roi_display"/> 
         <param name="label" type="int" value="1" />
 	<remap from ="input_image" to="HaarDispAdaColorImage"/>
 	<remap from ="input_rois" to="HaarDispAdaOutputRois"/>  
-   </node-->
+   </node>
    
    <!-- Launch Tracking Node-->
    <node name="TrackNode" pkg="object_tracking" type="object_tracking_node" output="screen">	
        <param name="Q_Size" value="2" />
-       <remap from="Color_Image" to="HogSvmColorImage"/>	
+       <!--remap from="Color_Image" to="HogSvmColorImage"/>	
        <remap from="Disparity_Image" to="HogSvmDisparityImage"/>
-       <remap from="input_rois" to="HogSvmOutputRois"/>
+       <remap from="input_rois" to="HogSvmOutputRois"/-->
+       <remap from="Color_Image" to="HaarDispAdaColorImage"/>	
+       <remap from="Disparity_Image" to="HaarDispAdaDisparityImage"/>
+       <remap from="input_rois" to="HaarDispAdaOutputRois"/>
        <remap from="l_camera_info" to="camera/depth_registered/camera_info"/>
        <remap from="r_camera_info" to="camera/projector/camera_info"/>
        <param name="Filter_Dir" value="$(find object_tracking)/perception_data" />
        <param name="Calculate_Covariance" value="true" />
-       <param name="CSV_Filename" value="/home/matteo/HogSvmPCL-0975_HaarDisp_univocalDetTrackCorresp.csv" />
+       <param name="CSV_Filename" value="/home/matteo/test1.csv" />
        <param name="Show_Images" value="true" />
        <param name="Write_image_results" value="true" />
        <param name="Debug_mode" value="false" />
