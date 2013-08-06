@@ -31,7 +31,7 @@
 	<remap from="input_rois" to="output_rois" />
 	<remap from="Color_Image" to="/camera/rgb/image_color" />
 	<remap from="Disparity_Image" to="/camera/depth/disparity" />
-	<param name="RemoveOverlappingRois" value="true"/>
+	<param name="RemoveOverlappingRois" value="false"/>
    </node>
 
    <!-- Launch HaarAda Nodelet-->
@@ -114,7 +114,7 @@
        <remap from="r_camera_info" to="camera/projector/camera_info"/>
        <param name="Filter_Dir" value="$(find object_tracking)/perception_data" />
        <param name="Calculate_Covariance" value="true" />
-       <param name="CSV_Filename" value="/home/matteo/test1_CROR.csv" />
+       <param name="CSV_Filename" value="/home/matteo/test1.csv" />
        <param name="Show_Images" value="true" />
        <param name="Write_image_results" value="true" />
        <param name="Debug_mode" value="false" />

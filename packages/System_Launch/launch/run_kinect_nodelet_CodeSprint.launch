@@ -1,0 +1,80 @@
+<launch>
+
+  <arg name="classifierDir" default="Kinect"/>
+
+  <!-- Launch the kinect-->
+  <include file="$(find kinect_data)/launch/kinect_data.launch"/> 
+	
+  <!--launch the nodelet manager -->
+  <node  pkg="nodelet" type="nodelet" name="MNode" args="manager" />	
+
+  <!-- Launch consistency nodelet -->
+  <node  pkg="nodelet" type="nodelet" name="Cons" args="load consistency/consistencyNodelet MNode" output="screen">	
+	<param name="Q_Size" value="2" />
+	<param name="UseDefaultRois" type="bool" value="true" />
+	<param name="mode" value="load"/>
+	<param name="label" 	 type="int"    value="1"  />
+	<param name="yaml_filename" type="string" value="$(env NIST_CLASSIFIERS)/$(arg classifierDir)/constraints.yml"/>
+	<param name="max_training_samples" type="int" value="115"/>
+    <param name="Kinect_Disparity_Fix" value="true"/>	
+	<remap from="input_rois" to="output_rois" />
+	<remap from="Color_Image" to="/camera/rgb/image_color" />
+	<remap from="Disparity_Image" to="/camera/depth/disparity" />	
+	<param name="RemoveOverlappingRois" value="true"/>
+   </node>
+
+   <!-- Launch HogSvmPCL Nodelet -->
+   <node  pkg="nodelet" type="nodelet" name="HogSvmPCL" args="load HogSvmPCL/hogsvmpcl_nodelet MNode" output="screen">	
+       <param name="Q_Size" value="2" />
+       <remap from="Color_Image" to="ConsistencyColorImage"/>	
+       <remap from="Disparity_Image" to="ConsistencyDisparityImage"/>
+       <remap from="input_rois" to="ConsistencyOutputRois"/>
+       <!--param name="classifier_file" value="$(env NIST_CLASSIFIERS)/$(arg classifierDir)/HogSvmPCL.yaml"/-->
+       <param name="classifier_file" value="$(env NIST_CLASSIFIERS)/$(arg classifierDir)/HogSvmPCL_half.yaml"/>
+       <param name="Mode" value="1"/>
+       <param name="HogSvmThreshold" value="-0.975"/>
+       <param name="RemoveOverlappingRois" value="true"/>
+       <param name="MaxOverlap" value="0.3"/>
+   </node> 
+   
+   <!-- Launch HaarDispAda Nodelet -->
+   <node  pkg="nodelet" type="nodelet" name="HaarDispAda" args="load HaarDispAda/haardispada_nodelet MNode" output="screen">	
+       <remap from="Color_Image" to="HogSvmColorImage"/>	
+       <remap from="Disparity_Image" to="HogSvmDisparityImage"/>
+       <remap from="input_rois" to="HogSvmOutputRois"/>
+       <param name="classifier_file" value="$(env NIST_CLASSIFIERS)/$(arg classifierDir)/HaarDispAda.xml"/>
+       <rosparam>
+           Q_Size: 1
+           mode: load
+           num_Training_Samples: 350
+           HaarDispAdaPrior: 7.5
+           Kinect_Disparity_Fix: false
+           UseMissingDataMask: false
+       </rosparam>
+   </node>  
+   
+   <!-- display the rois -->
+   <node pkg="roiViewer" type="roiViewer" name="HaarDispAdaViewer" >
+        <param name="mode" type="string" value="roi_display"/> 
+        <param name="label" type="int" value="1" />
+	<remap from ="input_image" to="HaarDispAdaColorImage"/>
+	<remap from ="input_rois" to="HaarDispAdaOutputRois"/>  
+   </node>
+   
+   <!-- Launch Tracking Node-->
+   <node name="TrackNode" pkg="object_tracking" type="object_tracking_node" output="screen">	
+       <param name="Q_Size" value="2" />
+       <remap from="Color_Image" to="HaarDispAdaColorImage"/>	
+       <remap from="Disparity_Image" to="HaarDispAdaDisparityImage"/>
+       <remap from="input_rois" to="HaarDispAdaOutputRois"/>
+       <remap from="l_camera_info" to="camera/depth/camera_info"/>
+       <remap from="r_camera_info" to="camera/projector/camera_info"/>
+       <param name="Filter_Dir" value="$(find object_tracking)/perception_data" />
+       <param name="Calculate_Covariance" value="true" />
+       <param name="CSV_Filename" value="/home/matteo/test1.csv" />
+       <param name="Show_Images" value="true" />
+       <param name="Write_image_results" value="true" />
+       <param name="Debug_mode" value="false" />
+  </node> 
+
+</launch>

@@ -288,6 +288,7 @@ class imagePublisherNode
 			//Replay Rate is the number of messages per second
 			ros::spinOnce();
 			loop_rate.sleep();
+			
 		}
 	}
 	~imagePublisherNode()
@@ -300,7 +301,7 @@ int main(int argc, char **argv)
 	ros::init(argc, argv, "imagePublisher");
 	ros::NodeHandle n;
 	imagePublisherNode imagePublisherNode(n);
-	ros::spin();
+	ros::spinOnce();
 
 	return 0;
 }

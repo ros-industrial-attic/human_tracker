@@ -8,7 +8,7 @@
   <arg name="replayRate" default="30."/>
   
   <!-- Play files from folder -->
-  <node name="ImagePublisher" pkg="imagePublisher" type="imagePublisher">
+  <node name="ImagePublisher" pkg="imagePublisher" type="imagePublisher" required="true">
     <param name="imageFolderPath" value="$(arg directory)"/>
     <param name="replayRate"      value="$(arg replayRate)"/>
     <param name="cameraInfoFilename"      value="$(arg cameraInfoFilename)"/>	
@@ -40,9 +40,6 @@
        <remap from="Color_Image" to="ConsistencyColorImage"/>	
        <remap from="Disparity_Image" to="ConsistencyDisparityImage"/>
        <remap from="input_rois" to="ConsistencyOutputRois"/>
-       <!--remap from="Color_Image" to="HaarDispAdaColorImage"/>	
-       <remap from="Disparity_Image" to="HaarDispAdaDisparityImage"/>
-       <remap from="input_rois" to="HaarDispAdaOutputRois"/-->
        <!--param name="classifier_file" value="$(env NIST_CLASSIFIERS)/$(arg classifierDir)/HogSvmPCL.yaml"/-->
        <param name="classifier_file" value="$(env NIST_CLASSIFIERS)/$(arg classifierDir)/HogSvmPCL_half.yaml"/>
        <param name="Mode" value="1"/>
@@ -68,23 +65,6 @@
    </node>  
 
    <!-- display the rois -->
-   <!--node pkg="roiViewer" type="roiViewer" name="ConsistencyViewer" >
-        <param name="mode" type="string" value="roi_display"/> 
-        <param name="label" type="int" value="1" />
-	<remap from ="input_image" to="ConsistencyColorImage"/>
-	<remap from ="input_rois" to="ConsistencyOutputRois"/>  
-   </node-->
-   
-   <!-- display the rois -->
-   <!--node pkg="roiViewer" type="roiViewer" name="HogSvmViewer" >
-        <param name="mode" type="string" value="roi_display"/> 
-        <param name="label" type="int" value="1" />
-        <param name="show_confidence" type="bool" value="true"/> 
-	<remap from ="input_image" to="HogSvmColorImage"/>
-	<remap from ="input_rois" to="HogSvmOutputRois"/>  
-   </node-->
-  
-   <!-- display the rois -->
    <node pkg="roiViewer" type="roiViewer" name="HaarDispAdaViewer" >
         <param name="mode" type="string" value="roi_display"/> 
         <param name="label" type="int" value="1" />
@@ -95,9 +75,6 @@
    <!-- Launch Tracking Node-->
    <node name="TrackNode" pkg="object_tracking" type="object_tracking_node" output="screen">	
        <param name="Q_Size" value="2" />
-       <!--remap from="Color_Image" to="HogSvmColorImage"/>	
-       <remap from="Disparity_Image" to="HogSvmDisparityImage"/>
-       <remap from="input_rois" to="HogSvmOutputRois"/-->
        <remap from="Color_Image" to="HaarDispAdaColorImage"/>	
        <remap from="Disparity_Image" to="HaarDispAdaDisparityImage"/>
        <remap from="input_rois" to="HaarDispAdaOutputRois"/>
