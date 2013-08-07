@@ -62,6 +62,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 // Used to convert disparity images to pointclouds
 #include <pointcloud_utils.h>
+#include <pcl_conversions/pcl_conversions.h>
 
 using namespace sensor_msgs;
 using namespace stereo_msgs;
@@ -169,10 +170,10 @@ class pointcloudPublisherNode
 
       // Published Messages
       pub_image_=node_.advertise<Image>("/camera/rgb/image_color",4);
-      pub_disparity_=node_.advertise<DisparityImage>("/camera/depth/disparity",4);
+      pub_disparity_=node_.advertise<DisparityImage>("/camera/depth_registered/disparity",4);
       pub_rgb_info_=node_.advertise<sensor_msgs::CameraInfo>("/camera/depth_registered/camera_info",4);
       pub_proj_info_=node_.advertise<sensor_msgs::CameraInfo>("/camera/projector/camera_info",4);
-      pub_pointcloud_ = node_.advertise<pcl::PointCloud<pcl::PointXYZRGB> >("/camera/rgb/points", 1);
+      pub_pointcloud_ = node_.advertise<pcl::PointCloud<pcl::PointXYZRGB> >("/camera/depth_registered/points", 1);
 
       std::string imgName;
       std::string disName;
@@ -320,8 +321,8 @@ class pointcloudPublisherNode
         // Disparity to point cloud conversion:
         output_cloud_->points.clear();
         pointcloud_creator.computePointcloudFast (cv_ptr->image, disp_image, output_cloud_);
-        output_cloud_->header.stamp = cv_ptr->header.stamp;
-        output_cloud_->header.seq = i;
+        output_cloud_->header = pcl_conversions::toPCL(cv_ptr->header);
+        //output_cloud_->header.seq = i;
 
         //Publish all messages:
         ROS_INFO("%s","PUBLISHED: pointcloudPublisher->image_msg");
