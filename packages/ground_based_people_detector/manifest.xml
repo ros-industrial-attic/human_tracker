@@ -1,0 +1,22 @@
+<package>
+  <description brief="ground_based_people_detector">
+
+     ground_based_people_detector
+
+  </description>
+  <author>Matteo Munaro</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/ground_based_people_detector</url>
+  <depend package="roscpp"/>
+  <!--depend package="pcl"/-->
+  <depend package="pcl_ros"/>
+  <depend package="pcl_conversions"/>
+  <depend package="sensor_msgs"/>
+  <depend package="std_msgs"/>  
+  <depend package="opencv2"/>
+  <depend package="roi_msgs"/>
+
+</package>
+
+

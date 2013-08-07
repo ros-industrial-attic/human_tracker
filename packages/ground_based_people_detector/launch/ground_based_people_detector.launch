@@ -1,0 +1,28 @@
+<launch>
+
+  <arg name="classifierDir" default="Kinect"/>
+
+  <!-- Launch the kinect-->
+  <include file="$(find kinect_data)/launch/kinect_data.launch"/> 
+
+  <!-- Launch PCL people detection node -->
+    <node pkg="ground_based_people_detector" type="ground_based_people_detector" name="ground_based_people_detector" >
+    <param name="HogSvmThreshold" value="-1.5"/>
+    <param name="classifier_file" value="$(env NIST_CLASSIFIERS)/$(arg classifierDir)/HogSvmPCL.yaml"/>
+    <param name="minimum_person_height" value="1.3"/>
+    <param name="maximum_person_height" value="2.3"/>
+    <param name="sampling_factor" value="4"/>
+    <param name="pointcloud_topic" value="/camera/depth_registered/points"/>
+    <param name="rate" value="60.0"/>
+  </node>
+
+  <!-- display the rois -->
+  <node pkg="roiViewer" type="roiViewer" name="PeopleDetectionViewer" >
+    <param name="mode" type="string" value="roi_display"/> 
+    <param name="label" type="int" value="1" />
+    <param name="show_confidence" type="bool" value="true" />
+    <remap from ="input_image" to="/camera/rgb/image_color"/>
+	<remap from ="input_rois" to="/ground_based_people_detector/GroundBasedPeopleDetectorOutputRois"/>  
+  </node>
+
+</launch>
