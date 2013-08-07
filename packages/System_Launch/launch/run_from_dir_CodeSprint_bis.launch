@@ -27,21 +27,46 @@
     <param name="rate" value="60.0"/>
   </node>
 
+   <!-- Launch HaarDispAda Node-->
+   <node name="HaarDispAdaNode" pkg="HaarDispAda" type="HaarDispAda174" >	
+	<param name="Q_Size" value="20" />
+        <remap from="Color_Image" to="/camera/rgb/image_color"/>	
+       <remap from="Disparity_Image" to="/camera/depth_registered/disparity"/>
+       <remap from="input_rois" to="/ground_based_people_detector/GroundBasedPeopleDetectorOutputRois"/>
+        <param name="mode" value="load"/>
+        <param name="classifier_file" value="$(env NIST_CLASSIFIERS)/$(arg classifierDir)/HaarDispAda.xml"/>
+        <param name="num_Training_Samples" value="350"/>
+        <param name="HaarDispAdaPrior" value="7.5"/>
+        <param name="Kinect_Disparity_Fix" value="false"/>	
+        <param name="UseMissingDataMask" value="false"/>
+   </node>  
+
   <!-- display the rois -->
-  <node pkg="roiViewer" type="roiViewer" name="PeopleDetectionViewer" >
+  <!--node pkg="roiViewer" type="roiViewer" name="PeopleDetectionViewer" >
     <param name="mode" type="string" value="roi_display"/> 
     <param name="label" type="int" value="1" />
     <param name="show_confidence" type="bool" value="true" />
     <remap from ="input_image" to="/camera/rgb/image_color"/>
 	<remap from ="input_rois" to="/ground_based_people_detector/GroundBasedPeopleDetectorOutputRois"/>  
-  </node>
+  </node-->
+
+   <!-- display the rois -->
+   <node pkg="roiViewer" type="roiViewer" name="HaarDispAdaViewer" >
+        <param name="mode" type="string" value="roi_display"/> 
+        <param name="label" type="int" value="1" />
+	<remap from ="input_image" to="HaarDispAdaColorImage"/>
+	<remap from ="input_rois" to="HaarDispAdaOutputRois"/>  
+   </node>
    
   <!-- Launch Tracking Node-->
   <node name="TrackNode" pkg="object_tracking" type="object_tracking_node" output="screen">	
-    <param name="Q_Size" value="10" />
-    <remap from="Color_Image" to="/camera/rgb/image_color"/>	
+    <param name="Q_Size" value="30" />
+    <remap from="Color_Image" to="HaarDispAdaColorImage"/>	
+    <remap from="Disparity_Image" to="HaarDispAdaDisparityImage"/>
+    <remap from="input_rois" to="HaarDispAdaOutputRois"/>
+    <!--remap from="Color_Image" to="/camera/rgb/image_color"/>	
     <remap from="Disparity_Image" to="/camera/depth_registered/disparity"/>
-    <remap from="input_rois" to="/ground_based_people_detector/GroundBasedPeopleDetectorOutputRois"/>
+    <remap from="input_rois" to="/ground_based_people_detector/GroundBasedPeopleDetectorOutputRois"/-->
     <remap from="l_camera_info" to="camera/depth_registered/camera_info"/>
     <remap from="r_camera_info" to="camera/projector/camera_info"/>
     <param name="Filter_Dir" value="$(find object_tracking)/perception_data" />
