@@ -351,7 +351,7 @@ int main(int argc, char **argv)
   ros::init(argc, argv, "pointcloudPublisher");
   ros::NodeHandle n;
   pointcloudPublisherNode pointcloudPublisherNode(n);
-  ros::spin();
+  ros::spinOnce();
 
   return 0;
 }
