@@ -73,15 +73,17 @@ pcl::visualization::PCLVisualizer viewer("PCL Viewer");
 
 enum { COLS = 640, ROWS = 480 };
 
-void cloud_cb(const sensor_msgs::PointCloud2& callback_cloud)
+void cloud_cb(const pcl::PCLPointCloud2& callback_cloud)
 {
-  // TODO: avoid double conversion
-  pcl::PCLPointCloud2 temp_cloud;
-  pcl_conversions::toPCL(callback_cloud, temp_cloud);
-  pcl::fromROSMsg(temp_cloud, *cloud);
-
+  pcl::fromPCLPointCloud2(callback_cloud, *cloud);
   new_cloud_available_flag = true;
 }
+
+//void cloud_cb(const PointCloudT::ConstPtr& callback_cloud)
+//{ // For older ROS:
+//	*cloud = *callback_cloud;
+//  new_cloud_available_flag = true;
+//}
 
 struct callback_args{
   // structure used to pass arguments to the callback function
@@ -173,7 +175,15 @@ int main (int argc, char** argv)
     clicked_points_indices.push_back(i);
   pcl::SampleConsensusModelPlane<PointT> model_plane(clicked_points_3d);
   model_plane.computeModelCoefficients(clicked_points_indices,ground_coeffs);
-  std::cout << "Ground plane: " << ground_coeffs(0) << " " << ground_coeffs(1) << " " << ground_coeffs(2) << " " << ground_coeffs(3) << std::endl;
+  ROS_ERROR("Ground plane coefficients: %f, %f, %f, %f.", ground_coeffs(0), ground_coeffs(1), ground_coeffs(2), ground_coeffs(3));
+
+//  // TEMPORARY, FOR TESTS with SwRI/NIST Dataset:
+//  Eigen::VectorXf ground_coeffs;
+//  ground_coeffs.resize(4);
+//  ground_coeffs(0) = 0.032049;
+//  ground_coeffs(1) = 0.994408;
+//  ground_coeffs(2) = 0.100624;
+//  ground_coeffs(3) = -1.448444;
 
   // Create classifier for people detection:
   pcl::people::PersonClassifier<pcl::RGB> person_classifier;
