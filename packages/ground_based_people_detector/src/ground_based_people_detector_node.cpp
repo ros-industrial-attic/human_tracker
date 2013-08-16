@@ -73,17 +73,11 @@ pcl::visualization::PCLVisualizer viewer("PCL Viewer");
 
 enum { COLS = 640, ROWS = 480 };
 
-void cloud_cb(const pcl::PCLPointCloud2& callback_cloud)
+void cloud_cb(const PointCloudT::ConstPtr& callback_cloud)
 {
-  pcl::fromPCLPointCloud2(callback_cloud, *cloud);
+  *cloud = *callback_cloud;
   new_cloud_available_flag = true;
 }
-
-//void cloud_cb(const PointCloudT::ConstPtr& callback_cloud)
-//{ // For older ROS:
-//	*cloud = *callback_cloud;
-//  new_cloud_available_flag = true;
-//}
 
 struct callback_args{
   // structure used to pass arguments to the callback function
